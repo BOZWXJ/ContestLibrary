@@ -15,20 +15,13 @@ namespace AtCoderProblem
 			StringBuilder sb = new StringBuilder();
 			Random rand = new Random();
 
-			int N = 2;
-			int Q = (int)PowerOf10(5);
-
+			long N = PowerOf10(12);
+			long Q = PowerOf10(12);
+			long R = PowerOf10(5);
 			sb.AppendLine($"{N} {Q}");
 
-			for (int i = 1; i < N; i++) {
-				sb.AppendLine($"{i} {i + 1}");
-			}
 
-			for (int i = 0; i < Q; i++) {
-				sb.AppendLine($"1 {2 * PowerOf10(5)}");
-			}
 
-			sb.AppendLine();
 
 			// 問題文出力
 			string txt = sb.ToString();

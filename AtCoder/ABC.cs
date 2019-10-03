@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace AtCoder
 {
-	// ABC138D X
 	public class ABC
 	{
 		static void Main(string[] args)
@@ -15,162 +14,77 @@ namespace AtCoder
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
-			int N = vs[0];
-			int Q = vs[1];
+			long[] vs = Console.ReadLine().Split().Select(long.Parse).ToArray();
+			long A = vs[0];
+			long B = vs[1];
 
-			MultiMap<int, int> ki = new MultiMap<int, int>();
-			for (int i = 0; i < N - 1; i++) {
-				vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
-				ki.Add(vs[0] - 1, vs[1] - 1);
-			}
+			long[] fa = PrimeFactorization(A);
+			long[] fb = PrimeFactorization(B);
 
-			long[] ans = new long[N];
-			for (int i = 0; i < Q; i++) {
-				vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
-				ans[vs[0] - 1] += vs[1];
-			}
-
-			Queue<int> queue = new Queue<int>();
-			queue.Enqueue(0);
-			while (queue.Count > 0) {
-				int no = queue.Dequeue();
-				if (ki.ContainsKey(no)) {
-					foreach (var i in ki[no]) {
-						ans[i] += ans[no];
-						queue.Enqueue(i);
+			long tmp;
+			List<long> pa = new List<long>();
+			if (fa.Length > 0) {
+				pa.Add(fa[0]);
+				tmp = fa[0];
+				for (int i = 1; i < fa.Length; i++) {
+					if (tmp != fa[i]) {
+						pa.Add(fa[i]);
+						tmp = fa[i];
 					}
 				}
 			}
-			Console.WriteLine(string.Join(" ", ans));
+			List<long> pb = new List<long>();
+			if (fb.Length > 0) {
+				pb.Add(fb[0]);
+				tmp = fb[0];
+				for (int i = 1; i < fb.Length; i++) {
+					if (tmp != fb[i]) {
+						pb.Add(fb[i]);
+						tmp = fb[i];
+					}
+				}
+			}
+			int ans = 1;
+			int ia = 0, ib = 0;
+			while (ia < pa.Count && ib < pb.Count) {
+				if (pa[ia] == pb[ib]) {
+					ans++;
+					ia++;
+					ib++;
+				} else if (pa[ia] < pb[ib]) {
+					ia++;
+				} else {
+					ib++;
+				}
+			}
+			Console.WriteLine(ans);
 
 
 			Console.Out.Flush();
 		}
-	}
-}
 
-#region MultiMap<TKey, TValue>
-
-namespace AtCoder
-{
-	public class MultiMap<TKey, TValue> : Dictionary<TKey, List<TValue>>
-	{
-		public void Add(TKey key, TValue value)
+		#region 素因数分解
+		static long[] PrimeFactorization(long x)
 		{
-			if (!ContainsKey(key)) {
-				Add(key, new List<TValue>());
+			if (x < 2) { return new long[] { }; }
+
+			List<long> ans = new List<long>();
+			while (x % 2 == 0) {
+				ans.Add(2);
+				x /= 2;
 			}
-			this[key].Add(value);
-		}
-		private new void Add(TKey key, List<TValue> values)
-		{
-			base.Add(key, values);
-		}
-	}
-}
-
-#endregion
-
-#region PriorityQueue<T> 優先度付きキュー
-
-namespace AtCoder
-{
-	public class PriorityQueue<T> where T : IComparable
-	{
-		private readonly List<T> _Heap;
-		private readonly Comparison<T> _Compare;
-
-		public int Count { get { return _Heap.Count; } }
-
-		public PriorityQueue() : this(false) { }
-		public PriorityQueue(bool reverse)
-		{
-			_Heap = new List<T>();
-			if (!reverse) {
-				_Compare = Comparer<T>.Default.Compare;
-			} else {
-				_Compare = (T x, T y) => Comparer<T>.Default.Compare(y, x);
-			}
-		}
-
-		public void Enqueue(T item)
-		{
-			_Heap.Add(item);
-			int i = _Heap.Count - 1;
-			while (i > 0) {
-				int p = (i - 1) / 2;
-				if (_Compare(_Heap[p], item) <= 0) {
-					break;
+			for (int i = 3; i <= Math.Sqrt(x); i += 2) {
+				while (x % i == 0) {
+					ans.Add(i);
+					x /= i;
 				}
-				_Heap[i] = _Heap[p];
-				i = p;
 			}
-			_Heap[i] = item;
-		}
-
-		public T Dequeue()
-		{
-			int size = _Heap.Count - 1;
-			T ret = _Heap[0];
-			T x = _Heap[size];
-			int i = 0;
-			while (i * 2 + 1 < size) {
-				var a = i * 2 + 1;
-				var b = i * 2 + 2;
-				if (b < size && _Compare(_Heap[b], _Heap[a]) < 0) {
-					a = b;
-				}
-				if (_Compare(_Heap[a], x) >= 0) {
-					break;
-				}
-				_Heap[i] = _Heap[a];
-				i = a;
+			if (x > 1) {
+				ans.Add(x);
 			}
-			_Heap[i] = x;
-			_Heap.RemoveAt(size);
-			return ret;
+			return ans.ToArray();
 		}
-
-		public T Peek()
-		{
-			return _Heap[0];
-		}
-
-		public void Clear()
-		{
-			_Heap.Clear();
-		}
-
-		public List<T>.Enumerator GetEnumerator()
-		{
-			return _Heap.GetEnumerator();
-		}
-
-		public override string ToString()
-		{
-			return string.Join(" ", _Heap);
-		}
-	}
-}
-
-#endregion
-
-#region MultiSet<T>
-
-namespace AtCoder
-{
-	public class MultiSet<T>
-	{
-		private Dictionary<T, int> _MultiSet;
-
-		public MultiSet()
-		{
-			_MultiSet = new Dictionary<T, int>();
-		}
+		#endregion
 
 	}
 }
-
-#endregion
-
