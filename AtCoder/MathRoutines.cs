@@ -9,47 +9,61 @@ namespace AtCoder
 	class MathRoutines
 	{
 
-		#region 最大公約数
-		static long GCD(long a, long b)
+		#region 素因数分解 long[] PrimeFactorization(long a)
+		static long[] PrimeFactorization(long a)
 		{
-			long tmp;
-			if (a < b) {
-				tmp = a;
-				a = b;
-				b = tmp;
+			if (a < 2) { return new long[] { }; }
+
+			List<long> ans = new List<long>();
+			while (a % 2 == 0) {
+				ans.Add(2);
+				a /= 2;
 			}
-			if (b == 0) {
-				return a;
+			for (int i = 3; i <= Math.Sqrt(a); i += 2) {
+				while (a % i == 0) {
+					ans.Add(i);
+					a /= i;
+				}
 			}
-			do {
-				tmp = a % b;
-				a = b;
-				b = tmp;
-			} while (b != 0);
-			return a;
+			if (a > 1) {
+				ans.Add(a);
+			}
+			return ans.ToArray();
 		}
 		#endregion
 
-		#region 素因数分解
-		static long[] PrimeFactorization(long x)
+		#region 最大公約数 long GCD(long a, long b)
+		static long GCD(long a, long b)
 		{
-			if (x < 2) { return new long[] { }; }
+			if (b == 0) { return a; }
 
-			List<long> ans = new List<long>();
-			while (x % 2 == 0) {
-				ans.Add(2);
-				x /= 2;
+			long tmp = a % b;
+			while (tmp != 0) {
+				a = b;
+				b = tmp;
+				tmp = a % b;
 			}
-			for (int i = 3; i <= Math.Sqrt(x); i += 2) {
-				while (x % i == 0) {
-					ans.Add(i);
-					x /= i;
+			return b;
+		}
+		#endregion
+
+		#region 最小公倍数 long LCM(long a, long b)
+		static long LCM(long a, long b)
+		{
+			long gcd;
+			if (b == 0) {
+				gcd = a;
+			} else {
+				long x = a, y = b;
+				long tmp = x % y;
+				while (tmp != 0) {
+					x = y;
+					y = tmp;
+					tmp = x % y;
 				}
+				gcd = y;
 			}
-			if (x > 1) {
-				ans.Add(x);
-			}
-			return ans.ToArray();
+			return a / gcd * b;
 		}
 		#endregion
 

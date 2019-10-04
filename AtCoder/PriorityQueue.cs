@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#region PriorityQueue<T> 優先度付きキュー
+#region 優先度付きキュー PriorityQueue<T>
 
 namespace AtCoder
 {
@@ -16,13 +16,15 @@ namespace AtCoder
 		public int Count { get { return _Heap.Count; } }
 
 		public PriorityQueue() : this(false) { }
-		public PriorityQueue(bool reverse)
+		public PriorityQueue(bool reverse) : this(reverse, Comparer<T>.Default) { }
+		public PriorityQueue(Comparer<T> Compare) : this(false, Compare) { }
+		public PriorityQueue(bool reverse, Comparer<T> Compare)
 		{
 			_Heap = new List<T>();
 			if (!reverse) {
-				_Compare = Comparer<T>.Default.Compare;
+				_Compare = Compare.Compare;
 			} else {
-				_Compare = (T x, T y) => Comparer<T>.Default.Compare(y, x);
+				_Compare = (T x, T y) => Compare.Compare(y, x);
 			}
 		}
 

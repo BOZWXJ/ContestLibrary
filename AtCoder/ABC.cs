@@ -18,71 +18,74 @@ namespace AtCoder
 			long A = vs[0];
 			long B = vs[1];
 
-			long[] fa = PrimeFactorization(A);
-			long[] fb = PrimeFactorization(B);
-
-			long tmp;
-			List<long> pa = new List<long>();
-			if (fa.Length > 0) {
-				pa.Add(fa[0]);
-				tmp = fa[0];
-				for (int i = 1; i < fa.Length; i++) {
-					if (tmp != fa[i]) {
-						pa.Add(fa[i]);
-						tmp = fa[i];
-					}
-				}
-			}
-			List<long> pb = new List<long>();
-			if (fb.Length > 0) {
-				pb.Add(fb[0]);
-				tmp = fb[0];
-				for (int i = 1; i < fb.Length; i++) {
-					if (tmp != fb[i]) {
-						pb.Add(fb[i]);
-						tmp = fb[i];
-					}
-				}
-			}
-			int ans = 1;
-			int ia = 0, ib = 0;
-			while (ia < pa.Count && ib < pb.Count) {
-				if (pa[ia] == pb[ib]) {
-					ans++;
-					ia++;
-					ib++;
-				} else if (pa[ia] < pb[ib]) {
-					ia++;
-				} else {
-					ib++;
-				}
-			}
-			Console.WriteLine(ans);
+			long a = 100000 - 1;
+			long b = 100000 - 7;
+			long gcd = GCD(a, b);
+			long lcm = LCM(a, b);
+			System.Diagnostics.Debug.WriteLine($"{a}:{string.Join(" ", PrimeFactorization(a))}");
+			System.Diagnostics.Debug.WriteLine($"{b}:{string.Join(" ", PrimeFactorization(b))}");
+			System.Diagnostics.Debug.WriteLine($"gcd {gcd}:{string.Join(" ", PrimeFactorization(gcd))}");
+			System.Diagnostics.Debug.WriteLine($"lcm {lcm}:{string.Join(" ", PrimeFactorization(lcm))}");
 
 
 			Console.Out.Flush();
 		}
 
-		#region 素因数分解
-		static long[] PrimeFactorization(long x)
+		#region 素因数分解 long[] PrimeFactorization(long a)
+		static long[] PrimeFactorization(long a)
 		{
-			if (x < 2) { return new long[] { }; }
+			if (a < 2) { return new long[] { }; }
 
 			List<long> ans = new List<long>();
-			while (x % 2 == 0) {
+			while (a % 2 == 0) {
 				ans.Add(2);
-				x /= 2;
+				a /= 2;
 			}
-			for (int i = 3; i <= Math.Sqrt(x); i += 2) {
-				while (x % i == 0) {
+			for (int i = 3; i <= Math.Sqrt(a); i += 2) {
+				while (a % i == 0) {
 					ans.Add(i);
-					x /= i;
+					a /= i;
 				}
 			}
-			if (x > 1) {
-				ans.Add(x);
+			if (a > 1) {
+				ans.Add(a);
 			}
 			return ans.ToArray();
+		}
+		#endregion
+
+		#region 最大公約数 long GCD(long a, long b)
+		static long GCD(long a, long b)
+		{
+			if (b == 0) { return a; }
+
+			long tmp = a % b;
+			while (tmp != 0) {
+				a = b;
+				b = tmp;
+				tmp = a % b;
+			}
+			return b;
+		}
+		#endregion
+
+		#region 最小公倍数 long LCM(long a, long b)
+		static long LCM(long a, long b)
+		{
+			long gcd;
+			if (b == 0) {
+				gcd = a;
+			} else {
+				long x = a, y = b;
+				long tmp = x % y;
+				while (tmp != 0) {
+					x = y;
+					y = tmp;
+					tmp = x % y;
+				}
+				gcd = y;
+			}
+			return a / gcd * b;
 		}
 		#endregion
 
