@@ -32,7 +32,7 @@ namespace AtCoder
 		}
 
 		#region 素因数分解 long[] PrimeFactorization(long a)
-		static long[] PrimeFactorization(long a)
+		public static long[] PrimeFactorization(long a)
 		{
 			if (a < 2) { return new long[] { }; }
 
@@ -55,7 +55,7 @@ namespace AtCoder
 		#endregion
 
 		#region 最大公約数 long GCD(long a, long b)
-		static long GCD(long a, long b)
+		public static long GCD(long a, long b)
 		{
 			if (b == 0) { return a; }
 
@@ -70,7 +70,7 @@ namespace AtCoder
 		#endregion
 
 		#region 最小公倍数 long LCM(long a, long b)
-		static long LCM(long a, long b)
+		public static long LCM(long a, long b)
 		{
 			long gcd;
 			if (b == 0) {

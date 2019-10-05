@@ -9,8 +9,22 @@ namespace AtCoder
 	class MathRoutines
 	{
 
+		#region 素数判定 bool IsPrime(long a)
+		public static bool IsPrime(long a)
+		{
+			if (a == 2) { return true; }
+			if (a < 2 || a % 2 == 0) { return false; }
+
+			double sqrt = Math.Sqrt(a);
+			for (int i = 3; i <= sqrt; i += 2) {
+				if (a % i == 0) { return false; }
+			}
+			return true;
+		}
+		#endregion
+
 		#region 素因数分解 long[] PrimeFactorization(long a)
-		static long[] PrimeFactorization(long a)
+		public static long[] PrimeFactorization(long a)
 		{
 			if (a < 2) { return new long[] { }; }
 
@@ -33,7 +47,7 @@ namespace AtCoder
 		#endregion
 
 		#region 最大公約数 long GCD(long a, long b)
-		static long GCD(long a, long b)
+		public static long GCD(long a, long b)
 		{
 			if (b == 0) { return a; }
 
@@ -48,7 +62,7 @@ namespace AtCoder
 		#endregion
 
 		#region 最小公倍数 long LCM(long a, long b)
-		static long LCM(long a, long b)
+		public static long LCM(long a, long b)
 		{
 			long gcd;
 			if (b == 0) {
