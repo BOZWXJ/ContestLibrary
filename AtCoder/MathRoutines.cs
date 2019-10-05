@@ -1,35 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AtCoder
 {
-	public class ABC
+	class MathRoutines
 	{
-		static void Main(string[] args)
-		{
-			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
-
-
-			long[] vs = Console.ReadLine().Split().Select(long.Parse).ToArray();
-			long A = vs[0];
-			long B = vs[1];
-
-			long a = 100000 - 1;
-			long b = 100000 - 7;
-			long gcd = GCD(a, b);
-			long lcm = LCM(a, b);
-			System.Diagnostics.Debug.WriteLine($"{a}:{string.Join(" ", PrimeFactorization(a))}");
-			System.Diagnostics.Debug.WriteLine($"{b}:{string.Join(" ", PrimeFactorization(b))}");
-			System.Diagnostics.Debug.WriteLine($"gcd {gcd}:{string.Join(" ", PrimeFactorization(gcd))}");
-			System.Diagnostics.Debug.WriteLine($"lcm {lcm}:{string.Join(" ", PrimeFactorization(lcm))}");
-
-
-			Console.Out.Flush();
-		}
 
 		#region 素因数分解 long[] PrimeFactorization(long a)
 		static long[] PrimeFactorization(long a)
