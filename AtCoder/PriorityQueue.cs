@@ -8,24 +8,20 @@ using System.Threading.Tasks;
 
 namespace AtCoder
 {
-	public class PriorityQueue<T> where T : IComparable
+	public class PriorityQueue<T> // where T : IComparable
 	{
 		private readonly List<T> _Heap;
 		private readonly Comparison<T> _Compare;
 
 		public int Count { get { return _Heap.Count; } }
 
-		public PriorityQueue() : this(false) { }
-		public PriorityQueue(bool reverse) : this(reverse, Comparer<T>.Default) { }
-		public PriorityQueue(Comparer<T> Compare) : this(false, Compare) { }
-		public PriorityQueue(bool reverse, Comparer<T> Compare)
+		public PriorityQueue() : this(Comparer<T>.Default.Compare) { }
+		public PriorityQueue(bool reverse) : this(reverse ? (Comparison<T>)((x, y) => Comparer<T>.Default.Compare(y, x)) : Comparer<T>.Default.Compare) { }
+		public PriorityQueue(Comparer<T> comparer) : this(comparer.Compare) { }
+		public PriorityQueue(Comparison<T> compare)
 		{
 			_Heap = new List<T>();
-			if (!reverse) {
-				_Compare = Compare.Compare;
-			} else {
-				_Compare = (T x, T y) => Compare.Compare(y, x);
-			}
+			_Compare = compare;
 		}
 
 		public void Enqueue(T item)

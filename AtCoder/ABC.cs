@@ -14,80 +14,108 @@ namespace AtCoder
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			long[] vs = Console.ReadLine().Split().Select(long.Parse).ToArray();
-			long A = vs[0];
-			long B = vs[1];
+			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
+			int x = vs[0], y = vs[1], z = vs[2], n = vs[3];
 
-			long a = 100000 - 1;
-			long b = 100000 - 7;
-			long gcd = GCD(a, b);
-			long lcm = LCM(a, b);
-			System.Diagnostics.Debug.WriteLine($"{a}:{string.Join(" ", PrimeFactorization(a))}");
-			System.Diagnostics.Debug.WriteLine($"{b}:{string.Join(" ", PrimeFactorization(b))}");
-			System.Diagnostics.Debug.WriteLine($"gcd {gcd}:{string.Join(" ", PrimeFactorization(gcd))}");
-			System.Diagnostics.Debug.WriteLine($"lcm {lcm}:{string.Join(" ", PrimeFactorization(lcm))}");
+			long[] a = Console.ReadLine().Split().Select(long.Parse).OrderByDescending(p => p).ToArray();
+			long[] b = Console.ReadLine().Split().Select(long.Parse).OrderByDescending(p => p).ToArray();
+			long[] c = Console.ReadLine().Split().Select(long.Parse).OrderByDescending(p => p).ToArray();
+
+			PriorityQueue<KeyValuePair<long, string>> queue = new PriorityQueue<KeyValuePair<long, string>>((p1, p2) => p1.Key.CompareTo(p2.Key));
+			queue.Enqueue(new KeyValuePair<long, string>(a[0] + b[0] + c[0], "0,0,0"));
+			for (int i = 0; i < n; i++) {
+
+			}
+			while (queue.Count > 0) {
+				System.Diagnostics.Debug.WriteLine(queue.Dequeue());
+			}
 
 
 			Console.Out.Flush();
 		}
+	}
 
-		#region 素因数分解 long[] PrimeFactorization(long a)
-		public static long[] PrimeFactorization(long a)
+
+}
+
+#region 優先度付きキュー PriorityQueue<T>
+
+namespace AtCoder
+{
+	public class PriorityQueue<T> // where T : IComparable
+	{
+		private readonly List<T> _Heap;
+		private readonly Comparison<T> _Compare;
+
+		public int Count { get { return _Heap.Count; } }
+
+		public PriorityQueue() : this(Comparer<T>.Default.Compare) { }
+		public PriorityQueue(bool reverse) : this(reverse ? (Comparison<T>)((x, y) => Comparer<T>.Default.Compare(y, x)) : Comparer<T>.Default.Compare) { }
+		public PriorityQueue(Comparer<T> comparer) : this(comparer.Compare) { }
+		public PriorityQueue(Comparison<T> compare)
 		{
-			if (a < 2) { return new long[] { }; }
+			_Heap = new List<T>();
+			_Compare = compare;
+		}
 
-			List<long> ans = new List<long>();
-			while (a % 2 == 0) {
-				ans.Add(2);
-				a /= 2;
-			}
-			for (int i = 3; i <= Math.Sqrt(a); i += 2) {
-				while (a % i == 0) {
-					ans.Add(i);
-					a /= i;
+		public void Enqueue(T item)
+		{
+			_Heap.Add(item);
+			int i = _Heap.Count - 1;
+			while (i > 0) {
+				int p = (i - 1) / 2;
+				if (_Compare(_Heap[p], item) <= 0) {
+					break;
 				}
+				_Heap[i] = _Heap[p];
+				i = p;
 			}
-			if (a > 1) {
-				ans.Add(a);
-			}
-			return ans.ToArray();
+			_Heap[i] = item;
 		}
-		#endregion
 
-		#region 最大公約数 long GCD(long a, long b)
-		public static long GCD(long a, long b)
+		public T Dequeue()
 		{
-			if (b == 0) { return a; }
-
-			long tmp = a % b;
-			while (tmp != 0) {
-				a = b;
-				b = tmp;
-				tmp = a % b;
-			}
-			return b;
-		}
-		#endregion
-
-		#region 最小公倍数 long LCM(long a, long b)
-		public static long LCM(long a, long b)
-		{
-			long gcd;
-			if (b == 0) {
-				gcd = a;
-			} else {
-				long x = a, y = b;
-				long tmp = x % y;
-				while (tmp != 0) {
-					x = y;
-					y = tmp;
-					tmp = x % y;
+			int size = _Heap.Count - 1;
+			T ret = _Heap[0];
+			T x = _Heap[size];
+			int i = 0;
+			while (i * 2 + 1 < size) {
+				var a = i * 2 + 1;
+				var b = i * 2 + 2;
+				if (b < size && _Compare(_Heap[b], _Heap[a]) < 0) {
+					a = b;
 				}
-				gcd = y;
+				if (_Compare(_Heap[a], x) >= 0) {
+					break;
+				}
+				_Heap[i] = _Heap[a];
+				i = a;
 			}
-			return a / gcd * b;
+			_Heap[i] = x;
+			_Heap.RemoveAt(size);
+			return ret;
 		}
-		#endregion
 
+		public T Peek()
+		{
+			return _Heap[0];
+		}
+
+		public void Clear()
+		{
+			_Heap.Clear();
+		}
+
+		public List<T>.Enumerator GetEnumerator()
+		{
+			return _Heap.GetEnumerator();
+		}
+
+		public override string ToString()
+		{
+			return string.Join(" ", _Heap);
+		}
 	}
 }
+
+#endregion
