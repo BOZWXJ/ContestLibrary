@@ -15,12 +15,18 @@ namespace AtCoderProblem
 			StringBuilder sb = new StringBuilder();
 			Random rand = new Random();
 
-			long N = PowerOf10(12);
-			long Q = PowerOf10(12);
-			long R = PowerOf10(5);
-			sb.AppendLine($"{N} {Q}");
 
+			string[] c = new string[] { "A", "C", "G", "T" };
+			foreach (var i in c) {
+				foreach (var j in c) {
+					foreach (var k in c) {
+						foreach (var l in c) {
+							sb.AppendLine($"{i}{j}{k}{l}");
 
+						}
+					}
+				}
+			}
 
 
 			// 問題文出力
