@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#region 優先度付きキュー PriorityQueue<T>
-
-namespace AtCoder
+namespace ContestLibrary
 {
+
+	#region 優先度付きキュー PriorityQueue<T>
 	public class PriorityQueue<T> // where T : IComparable
 	{
 		private readonly List<T> _Heap;
-		private readonly Comparison<T> _Compare;
+		private readonly Func<T, T, int> _Compare;
 
 		public int Count { get { return _Heap.Count; } }
 
 		public PriorityQueue() : this(Comparer<T>.Default.Compare) { }
-		public PriorityQueue(bool reverse) : this(reverse ? (Comparison<T>)((x, y) => Comparer<T>.Default.Compare(y, x)) : Comparer<T>.Default.Compare) { }
+		public PriorityQueue(bool reverse) : this((x, y) => Comparer<T>.Default.Compare(reverse ? y : x, reverse ? x : y)) { }
 		public PriorityQueue(Comparer<T> comparer) : this(comparer.Compare) { }
-		public PriorityQueue(Comparison<T> compare)
+		public PriorityQueue(Func<T, T, int> compare)
 		{
 			_Heap = new List<T>();
 			_Compare = compare;
@@ -82,6 +82,6 @@ namespace AtCoder
 			return string.Join(" ", _Heap);
 		}
 	}
-}
+	#endregion
 
-#endregion
+}

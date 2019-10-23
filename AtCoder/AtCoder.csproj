@@ -48,8 +48,9 @@
   <ItemGroup>
     <Compile Include="ABC.cs" />
     <Compile Include="MathRoutines.cs" />
-    <None Include="MultiMap.cs" />
-    <None Include="PriorityQueue.cs" />
+    <Compile Include="SearchRoutines.cs" />
+    <Compile Include="MultiMap.cs" />
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,40 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
-namespace AtCoder
+namespace ContestLibrary
 {
-	public class ABC
+	class SearchRoutines
 	{
-		static void Main(string[] args)
-		{
-			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
-
-
-			int n = int.Parse(Console.ReadLine());
-			int[] l = Console.ReadLine().Split().Select(int.Parse).OrderBy(p => p).ToArray();
-			//System.Diagnostics.Debug.WriteLine(string.Join(" ", l));
-
-			long ans = 0;
-			for (int i = 0; i < n; i++) {
-				for (int j = i + 1; j < n; j++) {
-					int t = l[i] + l[j];
-					int index = BinarySearch(l, j + 1, n - 1, t);
-					if (index < 0) {
-						index = ~index;
-					}
-					ans += index - (j + 1);
-				}
-			}
-			Console.WriteLine(ans);
-
-
-			Console.Out.Flush();
-		}
-
 
 		#region 二分探索 int BinarySearch<T>(T[] array, int lower, int upper, T value, Comparison<T> compare)
 		public static int BinarySearch<T>(T[] array, T value) { return BinarySearch(array, 0, array.Length - 1, value, Comparer<T>.Default.Compare); }
@@ -66,7 +39,6 @@ namespace AtCoder
 			return lower;
 		}
 		#endregion
-
 
 	}
 }

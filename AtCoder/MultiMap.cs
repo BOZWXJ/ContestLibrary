@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-#region MultiMap<TKey, TValue>
-
-namespace AtCoder
+namespace ContestLibrary
 {
+
+	#region MultiMap<TKey, TValue>
 	public class MultiMap<TKey, TValue> : Dictionary<TKey, List<TValue>>
 	{
 		public void Add(TKey key, TValue value)
@@ -22,6 +22,7 @@ namespace AtCoder
 			base.Add(key, values);
 		}
 	}
+	#endregion
+
 }
 
-#endregion
