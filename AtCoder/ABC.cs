@@ -14,59 +14,47 @@ namespace AtCoder
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			int n = int.Parse(Console.ReadLine());
-			int[] l = Console.ReadLine().Split().Select(int.Parse).OrderBy(p => p).ToArray();
-			//System.Diagnostics.Debug.WriteLine(string.Join(" ", l));
+			double[] vs = Console.ReadLine().Split().Select(double.Parse).ToArray();
+			double a = vs[0];
+			double b = vs[1];
+			double x = vs[2] / a;
+			double diff = x / 100000000000;
+			double s = a * b / 2;
+			bool f = s < x;
 
-			long ans = 0;
-			for (int i = 0; i < n; i++) {
-				for (int j = i + 1; j < n; j++) {
-					int t = l[i] + l[j];
-					int index = BinarySearch(l, j + 1, n - 1, t);
-					if (index < 0) {
-						index = ~index;
-					}
-					ans += index - (j + 1);
+			double max = f ? b : a;
+			double min = 0;
+			double c;
+			double deg;
+			while (true) {
+				c = (max + min) / 2;
+				if (f) {
+					// 対角より多い
+					s = a * c + a * (b - c) / 2;
+				} else {
+					// 対角より少ない
+					s = c * b / 2;
+		}
+
+				if (Math.Abs(s - x) < diff) {
+					if (f) {
+						// 対角より多い
+						deg = Math.Atan((b - c) / a) * 180 / Math.PI;
+				} else {
+						// 対角より少ない
+						deg = Math.Atan(b / c) * 180 / Math.PI;
 				}
+					Console.WriteLine(deg);
+					break;
+				} else if (s < x) {
+					min = c;
+				} else {
+					max = c;
 			}
-			Console.WriteLine(ans);
+		}
 
 
 			Console.Out.Flush();
 		}
-
-
-		#region 二分探索 int BinarySearch<T>(T[] array, int lower, int upper, T value, Comparison<T> compare)
-		public static int BinarySearch<T>(T[] array, T value) { return BinarySearch(array, 0, array.Length - 1, value, Comparer<T>.Default.Compare); }
-		public static int BinarySearch<T>(T[] array, T value, IComparer<T> comparer) { return BinarySearch(array, 0, array.Length - 1, value, comparer.Compare); }
-		public static int BinarySearch<T>(T[] array, T value, Func<T, T, int> compare) { return BinarySearch(array, 0, array.Length - 1, value, compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value) { return BinarySearch(array, lower, upper, value, Comparer<T>.Default.Compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value, IComparer<T> comparer) { return BinarySearch(array, lower, upper, value, comparer.Compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value, Func<T, T, int> compare)
-		{
-			if (lower > upper) {
-				return ~(upper + 1);
-			}
-			int up = upper, mid;
-			while (lower < up) {
-				mid = (lower + up) / 2;
-				if (compare(array[mid], value) < 0) {
-					lower = mid + 1;
-				} else {
-					up = mid;
-				}
-			}
-			int r = compare(array[lower], value);
-			if (r != 0) {
-				if (lower == upper && r < 0) {
-					lower++;
-				}
-				lower = ~lower;
-			}
-			return lower;
-		}
-		#endregion
-
-
 	}
 }
