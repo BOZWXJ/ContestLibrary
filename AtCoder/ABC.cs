@@ -14,59 +14,27 @@ namespace AtCoder
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			int n = int.Parse(Console.ReadLine());
-			int[] l = Console.ReadLine().Split().Select(int.Parse).OrderBy(p => p).ToArray();
-			//System.Diagnostics.Debug.WriteLine(string.Join(" ", l));
+			long mod = 1000000000 + 7;
+
+			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
+			int n = vs[0];	// 総数
+			int k = vs[1];	// 青
 
 			long ans = 0;
-			for (int i = 0; i < n; i++) {
-				for (int j = i + 1; j < n; j++) {
-					int t = l[i] + l[j];
-					int index = BinarySearch(l, j + 1, n - 1, t);
-					if (index < 0) {
-						index = ~index;
-					}
-					ans += index - (j + 1);
-				}
-			}
+
+			// 順列
+			// nPr = n! / (n-r)! = n*(n-1)*(n-2)*...*(n-(r-1))
+
+			// 組み合わせ
+			// nCr = nPr / r! = n! / r!(n-r)! = n*(n-1)*(n-2)*...*(n-(r-1)) / r*(r-1)*...*1
+			// nCr = nCn-r
+			// nCr = n-1Cr-1 + n-1Cr
+
+
 			Console.WriteLine(ans);
 
 
 			Console.Out.Flush();
 		}
-
-
-		#region 二分探索 int BinarySearch<T>(T[] array, int lower, int upper, T value, Comparison<T> compare)
-		public static int BinarySearch<T>(T[] array, T value) { return BinarySearch(array, 0, array.Length - 1, value, Comparer<T>.Default.Compare); }
-		public static int BinarySearch<T>(T[] array, T value, IComparer<T> comparer) { return BinarySearch(array, 0, array.Length - 1, value, comparer.Compare); }
-		public static int BinarySearch<T>(T[] array, T value, Func<T, T, int> compare) { return BinarySearch(array, 0, array.Length - 1, value, compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value) { return BinarySearch(array, lower, upper, value, Comparer<T>.Default.Compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value, IComparer<T> comparer) { return BinarySearch(array, lower, upper, value, comparer.Compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value, Func<T, T, int> compare)
-		{
-			if (lower > upper) {
-				return ~(upper + 1);
-			}
-			int up = upper, mid;
-			while (lower < up) {
-				mid = (lower + up) / 2;
-				if (compare(array[mid], value) < 0) {
-					lower = mid + 1;
-				} else {
-					up = mid;
-				}
-			}
-			int r = compare(array[lower], value);
-			if (r != 0) {
-				if (lower == upper && r < 0) {
-					lower++;
-				}
-				lower = ~lower;
-			}
-			return lower;
-		}
-		#endregion
-
-
 	}
 }

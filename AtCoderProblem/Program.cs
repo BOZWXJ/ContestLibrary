@@ -16,22 +16,20 @@ namespace AtCoderProblem
 			Random rand = new Random();
 
 
-			string[] c = new string[] { "A", "C", "G", "T" };
-			foreach (var i in c) {
-				foreach (var j in c) {
-					foreach (var k in c) {
-						foreach (var l in c) {
-							sb.AppendLine($"{i}{j}{k}{l}");
-
-						}
-					}
-				}
+			int N = 100000;
+			int M = 100000;
+			sb.AppendLine($"{N} {M}");
+			for (int i = 0; i < N; i++) {
+				int a = rand.Next(1, 100);
+				int b = rand.Next(1, 100);
+				sb.AppendLine($"{a} {b}");
 			}
+			sb.AppendLine();
 
 
 			// 問題文出力
 			string txt = sb.ToString();
-			Console.WriteLine(txt);
+			//Console.WriteLine(txt);
 			File.AppendAllText(@"..\..\..\AtCoder\Problem.txt", txt, Encoding.ASCII);
 		}
 
