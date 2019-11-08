@@ -9,48 +9,65 @@ namespace AtCoder
 {
 	public class ABC
 	{
+		static long mod = 1000000007;  // 10^9+7
+
 		static void Main(string[] args)
 		{
-			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-			sw.Start();
-
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			long mod = 1000000000 + 7;
+			int n = int.Parse(Console.ReadLine());
+			//int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
 
-			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
-			int n = vs[0];  // 総数
-			int b = vs[1];  // 青
-			int r = n - b;  // 赤
-
-			// 順列
-			// nPr = n! / (n-r)!
-			// 組み合わせ
-			// nCr = nPr / r! = n! / r!(n-r)!
-			// 公式
-			// nCr = nCn-r
-			// nCr = n-1Cr + n-1Cr-1
-			// nC0 = 1
-			// nC1 = n
-			long[,] dp = new long[n + 2, n + 2];
-			for (int i = 0; i <= n; i++) {
-				dp[i, 0] = 1;
-			}
-			for (int j = 1; j <= b; j++) {
-				for (int i = j; i <= n; i++) {
-					dp[i, j] = (dp[i - 1, j] + dp[i - 1, j - 1]) % mod;
-				}
-				// r+1Cj * b-1Cj-1
-				long ans = dp[r + 1, j] * dp[b - 1, j - 1] % mod;
-				Console.WriteLine(ans);
-			}
+			long ans = Dfs(n, "");
+			Console.WriteLine(ans);
 
 
 			Console.Out.Flush();
-
-			sw.Stop();
-			System.Diagnostics.Debug.WriteLine(sw.Elapsed);
 		}
+
+		static readonly Dictionary<string, long> memo = new Dictionary<string, long>();
+		static long Dfs(int len, string s)
+		{
+			var key = $"{len}{s}";
+			if (memo.ContainsKey(key)) {
+				return memo[key];
+			}
+			if (len == 0) {
+				return 1;
+			}
+			long result = 0;
+			foreach (var c in "ACGT") {
+				string next = c + s;
+				if (next.Length > 4) {
+					next = next.Substring(0, 4);
+				}
+				if (Check(next)) {
+					result = (result + Dfs(len - 1, next)) % mod;
+				}
+			}
+			memo.Add(key, result);
+			return result;
+		}
+
+		static bool Check(string s)
+		{
+			if (s.Length >= 3) {
+				// AGC
+				if (s[0] == 'A' && s[1] == 'G' && s[2] == 'C') { return false; }
+				// GAC
+				if (s[0] == 'G' && s[1] == 'A' && s[2] == 'C') { return false; }
+				// ACG
+				if (s[0] == 'A' && s[1] == 'C' && s[2] == 'G') { return false; }
+			}
+			if (s.Length >= 4) {
+				// A.GC
+				if (s[0] == 'A' && s[2] == 'G' && s[3] == 'C') { return false; }
+				// AG.C
+				if (s[0] == 'A' && s[1] == 'G' && s[3] == 'C') { return false; }
+			}
+			return true;
+		}
+
 	}
 }

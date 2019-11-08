@@ -81,5 +81,15 @@ namespace ContestLibrary
 		}
 		#endregion
 
+		// 順列
+		// nPr = n! / (n-r)!
+		// 組み合わせ
+		// nCr = nPr / r! = n! / r!(n-r)!
+		// 公式
+		// nCr = nCn-r
+		// nCr = n-1Cr + n-1Cr-1
+		// nC0 = 1
+		// nC1 = n
+
 	}
 }
