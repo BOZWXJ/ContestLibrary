@@ -9,42 +9,106 @@ namespace AtCoder
 {
 	public class ABC
 	{
-		static long mod = 1000000007;  // 10^9+7
+		static int mod = 1000000007;  // 10^9+7
 
 		static void Main(string[] args)
 		{
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			//int n = int.Parse(Console.ReadLine());
-			ulong[] vs = Console.ReadLine().Split().Select(ulong.Parse).ToArray();
-			ulong a = Math.Max(vs[0] - 1, 0);
-			ulong b = vs[1];
-			ulong ans = 0;
-			for (int i = 0; i < 64; i++) {
-				ulong c = Count1(b, i) - Count1(a, i);
-				if (c % 2 == 1) {
-					ans += (1UL << i);
-				}
+			// int n = int.Parse(Console.ReadLine());
+			// string s = Console.ReadLine();
+			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
+			int n = vs[0];
+			int m = vs[1];
+			int[][] bridges = new int[m][];
+			for (int i = 0; i < m; i++) {
+				bridges[i] = Console.ReadLine().Split().Select(p => int.Parse(p) - 1).ToArray();
 			}
-			Console.WriteLine(ans);
+			Array.Reverse(bridges);
+			UnionFind union = new UnionFind(n);
+			long[] ans = new long[m];
+			ans[0] = n * ((long)n - 1) / 2;
+			for (int i = 0; i < m - 1; i++) {
+				int a = bridges[i][0];
+				int b = bridges[i][1];
+				if (!union.Same(a, b)) {
+					ans[i + 1] = ans[i] - union.Size(a) * union.Size(b);
+				} else {
+					ans[i + 1] = ans[i];
+				}
+				union.Unite(a, b);
+			}
+			Array.Reverse(ans);
+			foreach (var item in ans) {
+				Console.WriteLine(item);
+			}
 
 
 			Console.Out.Flush();
 		}
+	}
 
-		static ulong Count1(ulong value, int pos)
+
+	#region
+	public class UnionFind
+	{
+		private readonly UnionFindNode[] _Parent;
+
+		public UnionFind(int n)
 		{
-			ulong x = 1UL << pos;
-			ulong y = x << 1;
-			ulong a = 0;
-			if (y > 0) {
-				a = value / y * x;
+			_Parent = new UnionFindNode[n];
+			for (int i = 0; i < n; i++) {
+				_Parent[i] = new UnionFindNode(i, 1);
 			}
-			ulong z = ~(0xffffffffffffffff << pos);
-			ulong b = (value & x) == 0 ? 0 : (value & z) + 1;
-			return a + b;
 		}
 
+		public int Find(int x)
+		{
+			if (_Parent[x].Parent == x) {
+				return _Parent[x].Parent;
+			}
+			return _Parent[x].Parent = Find(_Parent[x].Parent);
+		}
+
+		public int Size(int x)
+		{
+			return _Parent[Find(x)].Size;
+		}
+
+		public void Unite(int x, int y)
+		{
+			int rx = Find(x);
+			int ry = Find(y);
+			if (rx != ry) {
+				_Parent[ry].Parent = rx;
+				_Parent[rx].Size += _Parent[ry].Size;
+			}
+		}
+
+		public bool Same(int x, int y)
+		{
+			int rx = Find(x);
+			int ry = Find(y);
+			return rx == ry;
+		}
+
+		public override string ToString()
+		{
+			return string.Join(" ", _Parent.Select(p => $"({p.Parent},{p.Size})"));
+		}
 	}
+	public class UnionFindNode
+	{
+		public int Parent;
+		public int Size;
+		public UnionFindNode(int parent, int size)
+		{
+			Parent = parent;
+			Size = size;
+		}
+	}
+	#endregion
+
+
 }
