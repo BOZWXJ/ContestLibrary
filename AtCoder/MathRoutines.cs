@@ -91,5 +91,21 @@ namespace ContestLibrary
 		// nC0 = 1
 		// nC1 = n
 
+		#region 場合の数（DP計算版） long CombinationDP(int n, int r, int mod)
+		static long CombinationDP(int n, int r, int mod)
+		{
+			r = Math.Min(r, n - r);
+			long[,] dp = new long[n + 1, r + 1];
+			dp[0, 0] = 1;
+			for (int i = 1; i <= n; i++) {
+				dp[i, 0] = 1;
+				for (int j = 1; j <= i && j <= r; j++) {
+					dp[i, j] = (dp[i - 1, j - 1] + dp[i - 1, j]) % mod;
+				}
+			}
+			return dp[n, r];
+		}
+		#endregion
+
 	}
 }

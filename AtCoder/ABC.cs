@@ -9,106 +9,79 @@ namespace AtCoder
 {
 	public class ABC
 	{
-		static int mod = 1000000007;  // 10^9+7
+		static readonly int mod = 1000000007;  // 10^9+7
 
 		static void Main(string[] args)
 		{
 			Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
 
 
-			// int n = int.Parse(Console.ReadLine());
-			// string s = Console.ReadLine();
+			//int n = int.Parse(Console.ReadLine());
+			//string s = Console.ReadLine();
 			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
+			//long[] a = Console.ReadLine().Split().Select(long.Parse).ToArray();
 			int n = vs[0];
 			int m = vs[1];
-			int[][] bridges = new int[m][];
-			for (int i = 0; i < m; i++) {
-				bridges[i] = Console.ReadLine().Split().Select(p => int.Parse(p) - 1).ToArray();
-			}
-			Array.Reverse(bridges);
-			UnionFind union = new UnionFind(n);
-			long[] ans = new long[m];
-			ans[0] = n * ((long)n - 1) / 2;
-			for (int i = 0; i < m - 1; i++) {
-				int a = bridges[i][0];
-				int b = bridges[i][1];
-				if (!union.Same(a, b)) {
-					ans[i + 1] = ans[i] - union.Size(a) * union.Size(b);
+
+			long[] primes = PrimeFactorization(m);
+			//System.Diagnostics.Debug.WriteLine($"{string.Join(" ", primes)}");
+			long ans = 1;
+			int c = 1;
+			for (int i = 0; i < primes.Length; i++) {
+				if (i + 1 < primes.Length && primes[i] == primes[i + 1]) {
+					c++;
 				} else {
-					ans[i + 1] = ans[i];
+					long tmp = CombinationDP(c + n - 1, c, mod);
+					//System.Diagnostics.Debug.WriteLine($"{primes[i]}:{c + n - 1} C {c} = {tmp}");
+					ans *= tmp;
+					ans %= mod;
+					c = 1;
 				}
-				union.Unite(a, b);
 			}
-			Array.Reverse(ans);
-			foreach (var item in ans) {
-				Console.WriteLine(item);
-			}
+			Console.WriteLine(ans);
 
 
 			Console.Out.Flush();
 		}
-	}
 
-
-	#region
-	public class UnionFind
-	{
-		private readonly UnionFindNode[] _Parent;
-
-		public UnionFind(int n)
+		#region 場合の数（DP計算版） long CombinationDP(int n, int r, int mod)
+		static long CombinationDP(int n, int r, int mod)
 		{
-			_Parent = new UnionFindNode[n];
-			for (int i = 0; i < n; i++) {
-				_Parent[i] = new UnionFindNode(i, 1);
+			r = Math.Min(r, n - r);
+			long[,] dp = new long[n + 1, r + 1];
+			dp[0, 0] = 1;
+			for (int i = 1; i <= n; i++) {
+				dp[i, 0] = 1;
+				for (int j = 1; j <= i && j <= r; j++) {
+					dp[i, j] = (dp[i - 1, j - 1] + dp[i - 1, j]) % mod;
+				}
 			}
+			return dp[n, r];
 		}
+		#endregion
 
-		public int Find(int x)
+		#region 素因数分解 long[] PrimeFactorization(long a)
+		public static long[] PrimeFactorization(long a)
 		{
-			if (_Parent[x].Parent == x) {
-				return _Parent[x].Parent;
+			if (a < 2) { return new long[] { }; }
+
+			List<long> ans = new List<long>();
+			while (a % 2 == 0) {
+				ans.Add(2);
+				a /= 2;
 			}
-			return _Parent[x].Parent = Find(_Parent[x].Parent);
-		}
-
-		public int Size(int x)
-		{
-			return _Parent[Find(x)].Size;
-		}
-
-		public void Unite(int x, int y)
-		{
-			int rx = Find(x);
-			int ry = Find(y);
-			if (rx != ry) {
-				_Parent[ry].Parent = rx;
-				_Parent[rx].Size += _Parent[ry].Size;
+			for (int i = 3; i <= Math.Sqrt(a); i += 2) {
+				while (a % i == 0) {
+					ans.Add(i);
+					a /= i;
+				}
 			}
+			if (a > 1) {
+				ans.Add(a);
+			}
+			return ans.ToArray();
 		}
+		#endregion
 
-		public bool Same(int x, int y)
-		{
-			int rx = Find(x);
-			int ry = Find(y);
-			return rx == ry;
-		}
-
-		public override string ToString()
-		{
-			return string.Join(" ", _Parent.Select(p => $"({p.Parent},{p.Size})"));
-		}
 	}
-	public class UnionFindNode
-	{
-		public int Parent;
-		public int Size;
-		public UnionFindNode(int parent, int size)
-		{
-			Parent = parent;
-			Size = size;
-		}
-	}
-	#endregion
-
-
 }
