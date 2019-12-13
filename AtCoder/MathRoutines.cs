@@ -107,5 +107,23 @@ namespace ContestLibrary
 		}
 		#endregion
 
+		#region 場合の数（Cache付きDP計算版） long CombinationCacheDP(int n, int r, int mod)
+		static long CombinationCacheDP(int n, int r, int mod)
+		{
+			r = Math.Min(r, n - r);
+			for (int i = _CombinationCacheDP.Count; i <= n; i++) {
+				_CombinationCacheDP.Add(new long[i / 2 + 1]);
+				_CombinationCacheDP[i][0] = 1;
+				for (int j = 1; j < _CombinationCacheDP[i].Length; j++) {
+					int k = j < _CombinationCacheDP[i - 1].Length ? j : _CombinationCacheDP[i - 1].Length - 1;
+					_CombinationCacheDP[i][j] = (_CombinationCacheDP[i - 1][j - 1] + _CombinationCacheDP[i - 1][k]) % mod;
+				}
+				//System.Diagnostics.Debug.WriteLine($"{i,2}:{string.Join(" ", _CombinationCacheDP[i].Select(p => p.ToString().PadLeft(3)))}");
+			}
+			return _CombinationCacheDP[n][r];
+		}
+		static readonly List<long[]> _CombinationCacheDP = new List<long[]>(new long[][] { new long[] { 1 } });
+		#endregion
+
 	}
 }
