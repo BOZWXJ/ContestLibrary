@@ -16,13 +16,16 @@ namespace AtCoderProblem
 			Random rand = new Random();
 
 
-			int N = 100000;
-			int M = 100000;
-			sb.AppendLine($"{N} {M}");
+			int N = 5;
+			sb.AppendLine($"{N}");
 			for (int i = 0; i < N; i++) {
-				int a = rand.Next(1, 100);
-				int b = rand.Next(1, 100);
-				sb.AppendLine($"{a} {b}");
+				for (int j = 0; j < N; j++) {
+					if (j > 0) {
+						sb.Append(" ");
+					}
+					sb.Append(rand.Next(1, 4) % 2);
+				}
+				sb.AppendLine();
 			}
 			sb.AppendLine();
 
