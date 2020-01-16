@@ -52,6 +52,7 @@
     <Compile Include="MultiMap.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SegTree.cs" />
     <Compile Include="UnionFind.cs" />
     <Compile Include="UtilityRoutines.cs" />
   </ItemGroup>
