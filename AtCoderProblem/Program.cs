@@ -17,12 +17,11 @@ namespace AtCoderProblem
 			StringBuilder sb = new StringBuilder();
 
 
-			int N = 100;
+			int N = 200000;
 			sb.AppendLine($"{N}");
-			sb.AppendLine(MakeSequence(N));
 			int[] a = new int[N];
 			for (int i = 0; i < N; i++) {
-				a[i] = rand.Next(1, 10000);
+				a[i] = rand.Next(1, N);
 			}
 			sb.AppendLine(string.Join(" ", a));
 

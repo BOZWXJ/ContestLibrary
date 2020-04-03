@@ -85,15 +85,33 @@ namespace ContestLibrary
 		// nPr = n! / (n-r)!
 		// 組み合わせ
 		// nCr = nPr / r! = n! / r!(n-r)!
+		// nCr = (n * (n-1) * ...(n-(r-1))) / (1 * 2 * ...r)
 		// 公式
 		// nCr = nCn-r
 		// nCr = n-1Cr + n-1Cr-1
 		// nC0 = 1
 		// nC1 = n
 
+		#region 場合の数（rが一桁程度）
+		static long Combination(int n, int r)
+		{
+			if (n < r) { return 0; }
+			r = Math.Min(r, n - r);
+			long ans = 1;
+			for (int i = n; i > n - r; i--) {
+				ans *= i;
+			}
+			for (int i = 2; i <= r; i++) {
+				ans /= i;
+			}
+			return ans;
+		}
+		#endregion
+
 		#region 場合の数（DP計算版） long CombinationDP(int n, int r, int mod)
 		static long CombinationDP(int n, int r, int mod)
 		{
+			if (n < r) { return 0; }
 			r = Math.Min(r, n - r);
 			long[,] dp = new long[n + 1, r + 1];
 			dp[0, 0] = 1;
@@ -110,6 +128,7 @@ namespace ContestLibrary
 		#region 場合の数（Cache付きDP計算版） long CombinationCacheDP(int n, int r, int mod)
 		static long CombinationCacheDP(int n, int r, int mod)
 		{
+			if (n < r) { return 0; }
 			r = Math.Min(r, n - r);
 			for (int i = _CombinationCacheDP.Count; i <= n; i++) {
 				_CombinationCacheDP.Add(new long[i / 2 + 1]);
