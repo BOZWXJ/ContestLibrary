@@ -17,19 +17,18 @@ namespace AtCoderProblem
 			StringBuilder sb = new StringBuilder();
 
 
-			int N = 200000;
-			sb.AppendLine($"{N}");
-			int[] a = new int[N];
+			int N = 20;
+			sb.AppendLine($"{N} 40");
 			for (int i = 0; i < N; i++) {
-				a[i] = rand.Next(1, N);
+				sb.Append(rand.Next(-100, 101) + " ");
 			}
-			sb.AppendLine(string.Join(" ", a));
+			sb.AppendLine();
 
 
 			// 問題文出力
 			string txt = sb.ToString();
 			//Console.WriteLine(txt);
-			File.AppendAllText(@"..\..\..\AtCoder\Problem.txt", txt, Encoding.ASCII);
+			File.AppendAllText(@"..\..\..\..\AtCoder\Problem.txt", txt, Encoding.ASCII);
 		}
 
 		static long PowerOf10(int x)

@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContestLibrary
 {
+	// Union-Find木
 
 	#region Union-Find木 UnionFind
 	public class UnionFind
 	{
 		private readonly UnionFindNode[] _Parent;
 
+		/// <summary>
+		/// Union-Find木
+		/// </summary>
+		/// <param name="n">サイズ</param>
 		public UnionFind(int n)
 		{
 			_Parent = new UnionFindNode[n];
@@ -33,6 +36,11 @@ namespace ContestLibrary
 			return _Parent[Find(x)].Size;
 		}
 
+		/// <summary>
+		/// xとyの木を併合
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
 		public void Unite(int x, int y)
 		{
 			int rx = Find(x);
@@ -43,6 +51,12 @@ namespace ContestLibrary
 			}
 		}
 
+		/// <summary>
+		/// x, yが同じ木に属している
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
 		public bool Same(int x, int y)
 		{
 			int rx = Find(x);

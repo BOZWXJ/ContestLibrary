@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContestLibrary
 {
@@ -78,6 +76,21 @@ namespace ContestLibrary
 				gcd = y;
 			}
 			return a / gcd * b;
+		}
+		#endregion
+
+		#region 繰り返し二乗法 long Pow(long x, long y, long mod)
+		static long Pow(long x, long y, long mod)
+		{
+			long result = 1;
+			while (y > 0) {
+				if (y % 2 == 1) {
+					result = result * x % mod;
+				}
+				x = x * x % mod;
+				y /= 2;
+			}
+			return result;
 		}
 		#endregion
 

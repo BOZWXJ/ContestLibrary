@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContestLibrary
 {
+	// セグメント木
 
 	#region セグメント木
 	public class SegTree<T> : IEnumerable<T>
