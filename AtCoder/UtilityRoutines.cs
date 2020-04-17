@@ -53,5 +53,12 @@ namespace ContestLibrary
 		}
 		#endregion
 
+		// swap / rotate
+		// lower_bound / upper_bound / equal_range
+		// next_permutation / prev_permutation
+		// deque / priority_queue / multiset / multimap
+		// __builtin_popcount / Integer.BitCount(Java)
+		// Scanner(Java)
+
 	}
 }

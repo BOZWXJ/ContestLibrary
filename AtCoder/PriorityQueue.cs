@@ -14,7 +14,7 @@ namespace ContestLibrary
 		public int Count { get { return heap.Count; } }
 
 		public PriorityQueue() : this(Comparer<T>.Default.Compare) { }
-		public PriorityQueue(bool reverse) : this((x, y) => Comparer<T>.Default.Compare(reverse ? y : x, reverse ? x : y)) { }
+		public PriorityQueue(bool reverse) : this((x, y) => reverse ? Comparer<T>.Default.Compare(y, x) : Comparer<T>.Default.Compare(x, y)) { }
 		public PriorityQueue(Comparer<T> comparer) : this(comparer.Compare) { }
 		public PriorityQueue(Func<T, T, int> compare)
 		{

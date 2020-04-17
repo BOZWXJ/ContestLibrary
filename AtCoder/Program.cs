@@ -21,7 +21,7 @@ namespace AtCoder
 
 				stopwatch.Stop();
 				Debug.WriteLine(stopwatch.Elapsed);
-				Debug.WriteLine(sw.ToString());
+				Debug.Write(sw.ToString());
 			} finally {
 				Console.SetIn(input);
 				Console.SetOut(output);
