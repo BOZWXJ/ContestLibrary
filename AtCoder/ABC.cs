@@ -1,5 +1,4 @@
-﻿using ContestLibrary;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -23,70 +22,72 @@ namespace AtCoder
 			//string s = Console.ReadLine();
 			//int n = int.Parse(Console.ReadLine());
 			//long x = long.Parse(Console.ReadLine());
-			//int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
+			int[] vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
 			//long[] vs = Console.ReadLine().Split().Select(long.Parse).ToArray();
 
-			Random rand = new Random(0);
-
-			ContestLibrary.BinarySearchTree<int> tree = new ContestLibrary.BinarySearchTree<int>();
-			foreach (var item in tree) {
-				System.Diagnostics.Debug.Write($"{item} ");
-			}
-			for (int i = 0; i < 50; i++) {
-				int r = rand.Next(0, 100);
-				tree.Add(r);
-				System.Diagnostics.Debug.WriteLine($"# Add({r})");
-			}
-			System.Diagnostics.Debug.WriteLine($"Count={tree.Count}");
-			tree.CheckNode();
-			tree.DebugPrint();
-			tree.Remove(72);
-			tree.GraphvizPrint();
-			System.Diagnostics.Debug.WriteLine($"Count={tree.Count}");
-			tree.CheckNode();
-			foreach (var item in tree) {
-				System.Diagnostics.Debug.Write($"{item} ");
-			}
-			System.Diagnostics.Debug.WriteLine("");
-			tree.Clear();
-			System.Diagnostics.Debug.WriteLine("Clear()");
-			System.Diagnostics.Debug.WriteLine($"Count={tree.Count}");
-			foreach (var item in tree) {
-				System.Diagnostics.Debug.Write($"{item} ");
-			}
+			long a = 12345678900000;
+			long b = 100000;
+			System.Diagnostics.Debug.WriteLine($"{a} / {b} = {a / b}");
+			a %= mod;
+			System.Diagnostics.Debug.WriteLine($"{a} / {b} = {a * ModInv(b, mod) % mod}");
 
 
-			List<string> list = new List<string>();
-			for (int i = 0; i < 50; i++) {
-				list.Add(rand.Next(0, 100).ToString());
-			}
-			list.Sort(string.CompareOrdinal);
-
-			for (int i = 0; i < 50; i++) {
-				System.Diagnostics.Debug.Write($"{i,2} ");
-			}
-			System.Diagnostics.Debug.WriteLine("");
-			for (int i = 0; i < 50; i++) {
-				System.Diagnostics.Debug.Write($"{list[i],2} ");
-			}
-			System.Diagnostics.Debug.WriteLine("");
-			string key = "51";
-			System.Diagnostics.Debug.WriteLine($"Array.BinarySearch({key}) = {Array.BinarySearch(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine($"SearchRoutines.BinarySearch({key}) = {SearchRoutines.BinarySearch(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine($"SearchRoutines.Lower_bound({key}) = {SearchRoutines.Lower_bound(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine($"SearchRoutines.Upper_bound({key}) = {SearchRoutines.Upper_bound(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine("");
-			key = "3";
-			System.Diagnostics.Debug.WriteLine($"Array.BinarySearch({key}) = {Array.BinarySearch(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine($"SearchRoutines.BinarySearch({key}) = {SearchRoutines.BinarySearch(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine($"SearchRoutines.Lower_bound({key}) = {SearchRoutines.Lower_bound(list.ToArray(), key)}");
-			System.Diagnostics.Debug.WriteLine($"SearchRoutines.Upper_bound({key}) = {SearchRoutines.Upper_bound(list.ToArray(), key)}");
-
-
-			long ans = 0;
-
-			Console.WriteLine(ans);
+			//int n = vs[0];
+			//int a = vs[1];
+			//int b = vs[2];
+			//long ans = ModPow(2, n, mod) - 1;
+			//System.Diagnostics.Debug.WriteLine($"{ans}");
+			//ans -= Combination(n, a, mod);
+			//ans = (ans + mod) % mod;
+			//System.Diagnostics.Debug.WriteLine($"{ans}");
+			//ans -= Combination(n, b, mod);
+			//ans = (ans + mod) % mod;
+			//System.Diagnostics.Debug.WriteLine($"{ans}");
+			//Console.WriteLine(ans);
 		}
+
+		#region 逆元（拡張Euclidの互除法） long ModInv(long a, long mod)
+		static long ModInv(long a, long mod)
+		{
+			long result = 1;
+
+
+			return result;
+		}
+		#endregion
+
+
+
+		#region 繰り返し二乗法 long ModPow(long x, long y, long mod)
+		static long ModPow(long x, long y, long mod)
+		{
+			long result = 1;
+			while (y > 0) {
+				if (y % 2 == 1) {
+					result = result * x % mod;
+				}
+				x = x * x % mod;
+				y /= 2;
+			}
+			return result;
+		}
+		#endregion
+
+		#region 場合の数 long Combination(long n, long r, long mod)
+		static long Combination(long n, long r, long mod)
+		{
+			if (n < r) { return 0; }
+			r = Math.Min(r, n - r);
+			long ans = 1;
+			for (int i = (int)n; i > n - r; i--) {
+				ans *= i;
+			}
+			for (int i = 2; i <= r; i++) {
+				ans /= i;
+			}
+			return ans;
+		}
+		#endregion
 
 	}
 }

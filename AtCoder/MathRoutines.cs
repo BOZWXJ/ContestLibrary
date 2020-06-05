@@ -79,8 +79,8 @@ namespace ContestLibrary
 		}
 		#endregion
 
-		#region 繰り返し二乗法 long Pow(long x, long y, long mod)
-		static long Pow(long x, long y, long mod)
+		#region 繰り返し二乗法 long ModPow(long x, long y, long mod)
+		static long ModPow(long x, long y, long mod)
 		{
 			long result = 1;
 			while (y > 0) {
@@ -94,6 +94,28 @@ namespace ContestLibrary
 		}
 		#endregion
 
+		#region 逆元（Fermatの小定理） long ModInv1(long a, long mod)
+		static long ModInv1(long a, long mod)
+		{
+			long b = mod - 2;
+			long result = 1;
+			while (b > 0) {
+				if (b % 2 == 1) {
+					result = result * a % mod;
+				}
+				a = a * a % mod;
+				b /= 2;
+			}
+			return result;
+		}
+		#endregion
+
+
+
+
+		// 等差数列
+		// 和
+
 		// 順列
 		// nPr = n! / (n-r)!
 		// 組み合わせ
@@ -105,7 +127,7 @@ namespace ContestLibrary
 		// nC0 = 1
 		// nC1 = n
 
-		#region 場合の数（rが一桁程度）
+		#region 場合の数（rが一桁程度） long Combination(int n, int r)
 		static long Combination(int n, int r)
 		{
 			if (n < r) { return 0; }

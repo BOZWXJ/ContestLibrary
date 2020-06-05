@@ -17,13 +17,12 @@ namespace AtCoderProblem
 			StringBuilder sb = new StringBuilder();
 
 
-			int N = 20;
-			sb.AppendLine($"{N} 40");
+			int N = 100000;
+			sb.AppendLine($"{N}");
 			for (int i = 0; i < N; i++) {
-				sb.Append(rand.Next(-100, 101) + " ");
+				sb.Append($"{rand.Next(1, 1000)} ");
 			}
 			sb.AppendLine();
-
 
 			// 問題文出力
 			string txt = sb.ToString();
