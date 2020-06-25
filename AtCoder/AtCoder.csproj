@@ -8,17 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="tmp\tmp.cs" />
+    <Compile Remove="tmp\**" />
+    <EmbeddedResource Remove="tmp\**" />
+    <None Remove="tmp\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Problem.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="tmp\" />
   </ItemGroup>
 
 </Project>
