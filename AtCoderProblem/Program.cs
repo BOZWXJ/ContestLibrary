@@ -16,11 +16,15 @@ namespace AtCoderProblem
 		{
 			StringBuilder sb = new StringBuilder();
 
-
-			int N = 100000;
+			// 10^6 1000000
+			// 10^5 100000
+			int N = 200000;
 			sb.AppendLine($"{N}");
 			for (int i = 0; i < N; i++) {
-				sb.Append($"{rand.Next(1, 1000)} ");
+				if (i > 0) {
+					sb.Append(" ");
+				}
+				sb.Append($"{rand.Next(1, 1000000)}");
 			}
 			sb.AppendLine();
 

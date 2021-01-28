@@ -23,6 +23,28 @@ namespace ContestLibrary
 		}
 		#endregion
 
+		#region 素数 GetPrimeNumbers(int max)
+		private static List<int> GetPrimeNumbers(int max)
+		{
+			bool[] sieve = new bool[max / 2];
+			for (int i = 3; i < sieve.Length; i += 2) {
+				int j = i / 2 - 1 + i;
+				while (j < sieve.Length) {
+					sieve[j] = true;
+					j += i;
+				}
+			}
+			List<int> prime = new List<int>();
+			prime.Add(2);
+			for (int i = 0; i < sieve.Length; i++) {
+				if (!sieve[i]) {
+					prime.Add((i + 1) * 2 + 1);
+				}
+			}
+			return prime;
+		}
+		#endregion
+
 		#region 素因数分解 long[] PrimeFactorization(long a)
 		public static long[] PrimeFactorization(long a)
 		{
@@ -254,6 +276,19 @@ namespace ContestLibrary
 		}
 		static readonly List<long[]> _CombinationCacheDP = new List<long[]>(new long[][] { new long[] { 1 } });
 		#endregion
+
+		// マンハッタン距離
+		// |xi - xj| + |yi - yj|
+		// 45度回転
+		// =max( xi-xj, xj-xi ) + max( yi-yj, yj-yi )
+		// =max( (xi-xj)+(yi-yj), (xi-xj)+(yj-yi),  (xj-xi)+(yi-yj),  (xj-xi)+(yj-yi) )
+		// =max( (xi+yi)-(xj+yj), (xi-yi)-(xj-yj), -(xi-yi)+(xj-yj), -(xi+yi)+(xj+yj) )
+		// =max( (xi+yi)-(xj+yj), (xj+yj)-(xi+yi),  (xi-yi)-(xj-yj),  (xj-yj)-(xi-yi) )
+		// =max( |(xi+yi)-(xj+yj)|, |(xi-yi)-(xj-yj)| )
+		// z = x + y
+		// w = x - y
+		// = max( | zi - zj |, | wi - wj | )
+
 
 	}
 }

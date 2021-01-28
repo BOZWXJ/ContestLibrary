@@ -7,7 +7,7 @@ namespace ContestLibrary
 {
 	// セグメント木
 
-	#region セグメント木
+	#region セグメント木 SegTree<T>
 	public class SegTree<T> : IEnumerable<T>
 	{
 		private readonly T INF;

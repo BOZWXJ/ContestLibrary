@@ -17,7 +17,7 @@ namespace AtCoder
 				var stopwatch = new Stopwatch();
 				stopwatch.Start();
 
-				ABC.Solve(args);
+				ABC.Solve();
 
 				stopwatch.Stop();
 				Debug.WriteLine(stopwatch.Elapsed);
