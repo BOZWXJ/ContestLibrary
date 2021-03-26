@@ -8,6 +8,8 @@ namespace ContestLibrary
 	{
 		static int Mod(long x, int m) { return (int)((x % m + m) % m); }
 		static long Mod(long x, long m) { return (x % m + m) % m; }
+		static long Squared(long x) { return x * x; }
+		static long Cubed(long x) { return x * x * x; }
 
 		#region 素数判定 bool IsPrime(long a)
 		public static bool IsPrime(long a)

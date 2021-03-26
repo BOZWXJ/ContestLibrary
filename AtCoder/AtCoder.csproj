@@ -7,6 +7,10 @@
     <StartupObject>AtCoder.Program</StartupObject>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="tmp\**" />
     <EmbeddedResource Remove="tmp\**" />

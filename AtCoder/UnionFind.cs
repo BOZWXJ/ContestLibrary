@@ -4,15 +4,16 @@ using System.Linq;
 
 namespace ContestLibrary
 {
-	// Union-Find木
+	// Union-Find 木
+	//   グループ分けを木構造で管理する
 
-	#region Union-Find木 UnionFind
+	#region Union-Find 木 UnionFind
 	public class UnionFind
 	{
 		private readonly UnionFindNode[] _Parent;
 
 		/// <summary>
-		/// Union-Find木
+		/// Union-Find 木
 		/// </summary>
 		/// <param name="n">サイズ</param>
 		public UnionFind(int n)
@@ -37,7 +38,22 @@ namespace ContestLibrary
 		}
 
 		/// <summary>
-		/// xとyの木を併合
+		/// グループの個数
+		/// </summary>
+		/// <returns></returns>
+		public int Count()
+		{
+			int result = 0;
+			foreach ((var item, var index) in _Parent.Select((p, i) => (p, i))) {
+				if (item.Parent == index) {
+					result++;
+				}
+			}
+			return result;
+		}
+
+		/// <summary>
+		/// x と y のグループを併合
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
@@ -52,7 +68,7 @@ namespace ContestLibrary
 		}
 
 		/// <summary>
-		/// x, yが同じ木に属している
+		/// x と y が同じグループに属しているか判定
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
@@ -66,7 +82,7 @@ namespace ContestLibrary
 
 		public override string ToString()
 		{
-			return string.Join(" ", _Parent.Select(p => $"({p.Parent},{p.Size})"));
+			return string.Join(" ", _Parent.Select((p, i) => $"{i}({p.Parent}, {p.Size})"));
 		}
 	}
 	public class UnionFindNode
