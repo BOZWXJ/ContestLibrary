@@ -70,6 +70,26 @@ namespace ContestLibrary
 		}
 		#endregion
 
+		#region 約数 long[] Divisor(long a)
+		public static long[] Divisor(long a)
+		{
+			List<long> result = new List<long>();
+			for (long i = 1; i * i <= a; i++) {
+				if (a % i == 0) {
+					result.Add(i);
+				}
+			}
+			int c = result.Count - 1;
+			if (result[c] == a / result[c]) {
+				c--;
+			}
+			for (int i = c; i >= 0; i--) {
+				result.Add(a / result[i]);
+			}
+			return result.ToArray();
+		}
+		#endregion
+
 		#region 最大公約数 long GCD(long a, long b)
 		public static long GCD(long a, long b)
 		{
@@ -183,6 +203,7 @@ namespace ContestLibrary
 
 		// 等差数列
 		// 和
+		// s = (1/2)n(2a+(n-1)d)
 
 		// 順列
 		// nPr = n! / (n-r)!
