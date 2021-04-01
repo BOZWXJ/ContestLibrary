@@ -6,6 +6,28 @@ namespace ContestLibrary
 {
 	class SearchRoutines
 	{
+		#region 二分探索
+		/// <summary>
+		/// 二分探索
+		/// </summary>
+		/// <param name="ok">func の結果が true</param>
+		/// <param name="ng">func の結果が false</param>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		static (long ok, long ng) BinarySearch(long ok, long ng, Func<long, bool> func)
+		{
+			while (Math.Abs(ng - ok) > 1) {
+				long n = (ok + ng) / 2;
+				if (func(n)) {
+					ok = n;
+				} else {
+					ng = n;
+				}
+			}
+			return (ok, ng);
+		}
+		#endregion
+
 		// 二分探索（存在しない場合は負、複数存在する場合は先頭）
 		#region BinarySearch<T>()
 		public static int BinarySearch<T>(T[] array, T value) { return BinarySearch(array, 0, array.Length - 1, value, Comparer<T>.Default.Compare); }
