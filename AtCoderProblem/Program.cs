@@ -16,16 +16,19 @@ namespace AtCoderProblem
 		{
 			StringBuilder sb = new StringBuilder();
 
-			// 10^6 1000000
-			// 10^5 100000
-			int N = 200000;
-			sb.AppendLine($"{N}");
+			//int N = 1000000; //  10^6 1000000
+			//int N = 200000; // 2*10^5  200000
+			//int N = 100000; //   10^5  100000
+			int N = 20; //   10^5  100000
+
+			int[] C = new int[N];
 			for (int i = 0; i < N; i++) {
-				if (i > 0) {
-					sb.Append(" ");
-				}
-				sb.Append($"{rand.Next(1, 1000000)}");
+				C[i] = rand.Next(N) + 1;
 			}
+
+			sb.AppendLine($"{N}");
+			sb.AppendLine(string.Join(" ", C));
+			sb.AppendLine(MakeTree(N));
 			sb.AppendLine();
 
 			// 問題文出力
