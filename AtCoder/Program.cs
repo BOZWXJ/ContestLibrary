@@ -6,6 +6,7 @@ namespace AtCoder
 {
 	class Program
 	{
+		[STAThread]
 		static void Main(string[] args)
 		{
 			var input = Console.In;

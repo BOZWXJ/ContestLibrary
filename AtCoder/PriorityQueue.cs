@@ -44,16 +44,16 @@ namespace ContestLibrary
 			T x = heap[size];
 			int i = 0;
 			while (i * 2 + 1 < size) {
-				var a = i * 2 + 1;
-				var b = i * 2 + 2;
-				if (b < size && compare(heap[b], heap[a]) < 0) {
-					a = b;
+				var left = i * 2 + 1;
+				var right = i * 2 + 2;
+				if (right < size && compare(heap[right], heap[left]) < 0) {
+					left = right;
 				}
-				if (compare(heap[a], x) >= 0) {
+				if (compare(heap[left], x) >= 0) {
 					break;
 				}
-				heap[i] = heap[a];
-				i = a;
+				heap[i] = heap[left];
+				i = left;
 			}
 			heap[i] = x;
 			heap.RemoveAt(size);

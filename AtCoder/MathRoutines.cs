@@ -11,6 +11,27 @@ namespace ContestLibrary
 		static long Squared(long x) { return x * x; }
 		static long Cubed(long x) { return x * x * x; }
 
+		#region 1～n の合計
+		public static long Total(long n)
+		{
+			return n * (n + 1) / 2;
+		}
+		#endregion
+
+		#region a～b の合計
+		public static long Total(long a, long b)
+		{
+			return (a + b) * (b - a + 1) / 2;
+		}
+		#endregion
+
+		#region 等差数列の和
+		public static long ArithmeticSeries(long a, long l, long n)
+		{
+			return (a + l) * n / 2;
+		}
+		#endregion
+
 		#region 素数判定 bool IsPrime(long a)
 		public static bool IsPrime(long a)
 		{

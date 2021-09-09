@@ -44,7 +44,10 @@ namespace ContestLibrary
 			}
 		}
 
-		// 深さ優先探索
+		/// <summary>
+		/// 深さ優先探索
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerable<int> Dfs()
 		{
 			bool[] flg = new bool[node.Length];
@@ -70,6 +73,25 @@ namespace ContestLibrary
 				yield return i;
 			}
 		}
+
+		/// <summary>
+		/// 再帰 深さ優先探索
+		/// </summary>
+		/// <param name="i"></param>
+		public void Saiki(int i)
+		{
+			//System.Diagnostics.Debug.WriteLine($"{i}");
+			Console.Write($"{i} ");
+			node[i] = 1;
+			foreach (var next in edge[i]) {
+				if (node[next] != 1) {
+					Saiki(next);
+					//System.Diagnostics.Debug.WriteLine($"{i}");
+					Console.Write($"{i} ");
+				}
+			}
+		}
+
 	}
 
 }

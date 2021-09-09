@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace ContestLibrary
 {
 	// 二分探索木 BinarySearchTree
-	// 
 
 	#region 二分探索木 BinarySearchTree
 	public class BinarySearchTree<T> : IEnumerable<T> // where T : IComparable
@@ -300,21 +300,24 @@ namespace ContestLibrary
 			if (tree.Root == null) {
 				return;
 			}
-			System.Diagnostics.Debug.WriteLine("digraph g {");
+			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("digraph g {");
 			var stack = new Stack<BinarySearchTree<int>.Node>();
 			stack.Push(tree.Root);
 			while (stack.Count > 0) {
 				var n = stack.Pop();
 				if (n.Left != null) {
 					stack.Push(n.Left);
-					System.Diagnostics.Debug.WriteLine($"  \"{n.No}:{n.Value}\"->\"{n.Left.No}:{n.Left.Value}\" [label=\"L\", tailport = sw, headport = n]");
+					sb.AppendLine($"  \"{n.No}:{n.Value}\"->\"{n.Left.No}:{n.Left.Value}\" [label=\"L\", tailport = sw, headport = n]");
 				}
 				if (n.Right != null) {
 					stack.Push(n.Right);
-					System.Diagnostics.Debug.WriteLine($"  \"{n.No}:{n.Value}\"->\"{n.Right.No}:{n.Right.Value}\" [label=\"R\", tailport = se, headport = n]");
+					sb.AppendLine($"  \"{n.No}:{n.Value}\"->\"{n.Right.No}:{n.Right.Value}\" [label=\"R\", tailport = se, headport = n]");
 				}
 			}
-			System.Diagnostics.Debug.WriteLine("}");
+			sb.AppendLine("}");
+			Clipboard.SetText(sb.ToString());
+			//System.Diagnostics.Debug.WriteLine(sb.ToString());
 		}
 	}
 	#endregion
