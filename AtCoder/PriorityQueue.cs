@@ -1,85 +1,109 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 namespace ContestLibrary
 {
-
 	#region 優先度付きキュー PriorityQueue<T>
-	public class PriorityQueue<T> // where T : IComparable
+	/// <summary>
+	/// 優先度付きキュー
+	/// 優先度が同じ場合、挿入順に取出される。
+	/// </summary>
+	/// <typeparam name="T">要素の型</typeparam>
+	class PriorityQueue<T> // where T : IComparable<T>
 	{
-		private readonly List<T> heap;
-		private readonly Func<T, T, int> compare;
+		public int Count => buffer.Count;
+		public T Top => buffer[0].value;
 
-		public int Count { get { return heap.Count; } }
+		private int id = 0;
+		private readonly List<(T value, int id)> buffer;
+		private readonly Func<(T value, int id), (T value, int id), int> compare;
 
 		public PriorityQueue() : this(Comparer<T>.Default.Compare) { }
-		public PriorityQueue(bool reverse) : this((x, y) => reverse ? Comparer<T>.Default.Compare(y, x) : Comparer<T>.Default.Compare(x, y)) { }
-		public PriorityQueue(Comparer<T> comparer) : this(comparer.Compare) { }
 		public PriorityQueue(Func<T, T, int> compare)
 		{
-			heap = new List<T>();
-			this.compare = compare;
+			buffer = new List<(T value, int id)>();
+			this.compare = (x, y) => {
+				int result = compare(x.value, y.value);
+				if (result == 0) {
+					result = -x.id.CompareTo(y.id);
+				}
+				return result;
+			};
 		}
 
-		public void Enqueue(T item)
+		public void Enqueue(T elem)
 		{
-			heap.Add(item);
-			int i = heap.Count - 1;
-			while (i > 0) {
-				int p = (i - 1) / 2;
-				if (compare(heap[p], item) <= 0) {
-					break;
+			int n = Count;
+			buffer.Add((elem, id++));
+			while (n != 0) {
+				int i = (n - 1) / 2;
+				if (compare(buffer[n], buffer[i]) > 0) {
+					(buffer[i], buffer[n]) = (buffer[n], buffer[i]);
 				}
-				heap[i] = heap[p];
-				i = p;
+				n = i;
 			}
-			heap[i] = item;
 		}
 
 		public T Dequeue()
 		{
-			int size = heap.Count - 1;
-			T ret = heap[0];
-			T x = heap[size];
-			int i = 0;
-			while (i * 2 + 1 < size) {
-				var left = i * 2 + 1;
-				var right = i * 2 + 2;
-				if (right < size && compare(heap[right], heap[left]) < 0) {
-					left = right;
+			T result = buffer[0].value;
+
+			int n = Count - 1;
+			buffer[0] = buffer[n];
+			buffer.RemoveAt(n);
+			for (int i = 0, j; (j = 2 * i + 1) < n;) {
+				if ((j != n - 1) && (compare(buffer[j], buffer[j + 1]) < 0)) {
+					j++;
 				}
-				if (compare(heap[left], x) >= 0) {
-					break;
+				if (compare(buffer[i], buffer[j]) < 0) {
+					(buffer[i], buffer[j]) = (buffer[j], buffer[i]);
 				}
-				heap[i] = heap[left];
-				i = left;
+				i = j;
 			}
-			heap[i] = x;
-			heap.RemoveAt(size);
-			return ret;
+			return result;
 		}
 
-		public T Peek()
+		public T this[int i]
 		{
-			return heap[0];
-		}
-
-		public void Clear()
-		{
-			heap.Clear();
-		}
-
-		public List<T>.Enumerator GetEnumerator()
-		{
-			return heap.GetEnumerator();
-		}
-
-		public override string ToString()
-		{
-			return string.Join(" ", heap);
+			get { return buffer[i].value; }
 		}
 	}
 	#endregion
 
+	static class PriorityQueue
+	{
+		public static void GraphvizPrint(this PriorityQueue<int> queue)
+		{
+			Dictionary<long, string> node = new Dictionary<long, string>();
+			List<string> edge = new List<string>();
+			for (int i = 0; i < queue.Count; i++) {
+				node.Add(i, $"  {i}[label=\"{queue[i]}\\nIndex={i}\"];");
+				int left = i * 2 + 1;
+				int right = i * 2 + 2;
+				if (left < queue.Count) {
+					edge.Add($"  \"{i}\"->\"{left}\" [label=\"L\", tailport = sw, headport = n]");
+				}
+				if (right < queue.Count) {
+					edge.Add($"  \"{i}\"->\"{right}\" [label=\"R\", tailport = se, headport = n]");
+				}
+			}
+
+			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("digraph g {");
+			foreach (var i in node.Keys.OrderBy(p => p)) {
+				sb.AppendLine(node[i]);
+			}
+			foreach (var s in edge) {
+				sb.AppendLine(s);
+			}
+			sb.AppendLine("}");
+
+			Clipboard.SetText(sb.ToString());
+			System.Diagnostics.Debug.WriteLine(sb.ToString());
+		}
+	}
 }

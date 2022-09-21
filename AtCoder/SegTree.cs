@@ -17,7 +17,20 @@ namespace ContestLibrary
 		private readonly Func<T, T, T> update;
 		private readonly Func<T, T, T> operation;
 
+		/// <summary>
+		/// SegTree<T>クラスの新しいインスタンスを初期化します。
+		/// </summary>
+		/// <param name="capacity"></param>
+		/// <param name="inf"></param>
+		/// <param name="query"></param>
 		public SegTree(int capacity, T inf, Func<T, T, T> query) : this(capacity, inf, query, (x, y) => y) { }
+		/// <summary>
+		/// SegTree<T>クラスの新しいインスタンスを初期化します。
+		/// </summary>
+		/// <param name="capacity"></param>
+		/// <param name="inf"></param>
+		/// <param name="query"></param>
+		/// <param name="update"></param>
 		public SegTree(int capacity, T inf, Func<T, T, T> query, Func<T, T, T> update)
 		{
 			long n = 1;

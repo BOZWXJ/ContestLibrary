@@ -16,20 +16,23 @@ namespace AtCoderProblem
 		{
 			StringBuilder sb = new StringBuilder();
 
+			//int N = 1000000000; //  10^9 1000000000
 			//int N = 1000000; //  10^6 1000000
+			//int N = 300000; // 3*10^5  300000
 			//int N = 200000; // 2*10^5  200000
 			//int N = 100000; //   10^5  100000
-			int N = 20; //   10^5  100000
 
-			int[] C = new int[N];
+			int N = 100;
+			int K = 10;
+			int[] a = new int[N];
 			for (int i = 0; i < N; i++) {
-				C[i] = rand.Next(N) + 1;
+				a[i] = rand.Next(1, N + 1);
 			}
 
-			sb.AppendLine($"{N}");
-			sb.AppendLine(string.Join(" ", C));
-			sb.AppendLine(MakeTree(N));
-			sb.AppendLine();
+			sb.AppendLine($"{N} {K}");
+			sb.AppendLine(string.Join(" ", a));
+			//sb.AppendLine(string.Join(" ", s));
+			//sb.AppendLine(string.Join(" ", t));
 
 			// 問題文出力
 			string txt = sb.ToString();
@@ -49,6 +52,14 @@ namespace AtCoderProblem
 				num[i] = i + 1;
 			}
 			return string.Join(" ", num.OrderBy(p => Guid.NewGuid()).ToArray());
+		}
+
+		static void Shuffle(int[] array)
+		{
+			for (int i = 0; i < array.Length - 1; i++) {
+				int j = rand.Next(i, array.Length);
+				(array[i], array[j]) = (array[j], array[i]);
+			}
 		}
 
 		// n 頂点, n-1 辺の木

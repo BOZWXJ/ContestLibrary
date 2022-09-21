@@ -303,6 +303,13 @@ namespace ContestLibrary
 		#endregion
 
 		#region 場合の数(Cache付きDP計算版 long CombinationCacheDP(int n, int r, int mod)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="n"></param>
+		/// <param name="r"></param>
+		/// <param name="mod"></param>
+		/// <returns></returns>
 		static long CombinationCacheDP(int n, int r, int mod)
 		{
 			if (n < r) { return 0; }
@@ -321,6 +328,25 @@ namespace ContestLibrary
 		static readonly List<long[]> _CombinationCacheDP = new List<long[]>(new long[][] { new long[] { 1 } });
 		#endregion
 
+
+		// 順列をすべて列挙する
+		// 10P10 00:00:53.8844800
+		public static IEnumerable<T[]> GetPermutation<T>(IEnumerable<T> collection)
+		{
+			// 未確定要素が一個のみ
+			if (collection.Count() == 1) {
+				yield return new T[] { collection.First() };
+			}
+			foreach (var item in collection) {
+				var selected = new T[] { item };
+				var unused = collection.Except(selected);
+				// 確定した要素以外の組み合わせを再帰で取り出し連結
+				foreach (var rightside in GetPermutation(unused)) {
+					yield return selected.Concat(rightside).ToArray();
+				}
+			}
+		}
+
 		// マンハッタン距離
 		// |xi - xj| + |yi - yj|
 		// 45度回転
@@ -333,6 +359,243 @@ namespace ContestLibrary
 		// w = x - y
 		// = max( | zi - zj |, | wi - wj | )
 
-
 	}
+
+	// 順列の生成
+	// 10,6 00:00:00.0667722
+	#region 順列の生成
+	public class Permutation
+	{
+		public int N { get; private set; }
+		public int K { get; private set; }
+		public int[] Index { get; private set; }
+		public int[] Result { get; private set; }
+
+		public Permutation(int n) : this(n, n) { }
+		public Permutation(int n, int k)
+		{
+			N = n;
+			K = k;
+		}
+
+		public void Reset()
+		{
+			Index = new int[N];
+			for (int i = 0; i < N; i++) {
+				Index[i] = -1;
+			}
+			Result = new int[K];
+			for (int i = 0; i < K; i++) {
+				Index[i] = i;
+				Result[i] = i;
+			}
+		}
+
+		public int[] Next()
+		{
+			if (Result == null) {
+				Reset();
+			} else {
+				int i = K - 1;
+				int j = Result[i];
+				Index[j] = -1;
+
+				// 次のパターンの開始位置
+				while (true) {
+					j++;
+					if (j < N) {
+						if (Index[j] == -1) {
+							break;
+						}
+					} else {
+						i--;
+						if (i >= 0) {
+							j = Result[i];
+							Index[j] = -1;
+						} else {
+							return null;
+						}
+					}
+				}
+				Result[i] = j;
+				Index[j] = i;
+				// 次のパターンの残りを埋める
+				j = 0;
+				while (i < K - 1) {
+					i++;
+					while (Index[j] != -1) {
+						j++;
+					}
+					Result[i] = j;
+					Index[j] = i;
+				}
+			}
+			return Result;
+		}
+	}
+	#endregion
+
+	// 順列の生成
+	// 10,6 00:00:00.7835979
+	#region 順列の生成
+	public class Permutation2
+	{
+		public int N { get; private set; }
+		public int K { get; private set; }
+		private readonly PriorityQueue<(int[] pattern, int[] flgs)> queue;
+		public Permutation2(int n, int k)
+		{
+			N = n;
+			K = k;
+			int[] all = new int[N];
+			for (int i = 0; i < N; i++) {
+				all[i] = i;
+			}
+
+			queue = new PriorityQueue<(int[] pattern, int[] flgs)>((x, y) => y.pattern.Length.CompareTo(x.pattern.Length));
+			for (int i = 0; i < N; i++) {
+				var (pattern, flgs) = MakePattern(new int[] { }, all, i);
+				queue.Enqueue((pattern, flgs));
+			}
+		}
+
+		public int[] Next()
+		{
+			if (queue.Count == 0) {
+				return null;
+			}
+			while (true) {
+				var (pattern, flgs) = queue.Dequeue();
+				if (pattern.Length == K) {
+					return pattern;
+				} else {
+					for (int i = 0; i < flgs.Length; i++) {
+						var next = MakePattern(pattern, flgs, flgs[i]);
+						queue.Enqueue(next);
+					}
+				}
+			}
+		}
+
+		private (int[], int[]) MakePattern(int[] pattern, int[] flgs, int i)
+		{
+			int[] p = pattern.Append(i).ToArray();
+			int[] f = flgs.Where(p => p != i).ToArray();
+			return (p, f);
+		}
+
+		#region 優先度付きキュー PriorityQueue<T>
+		/// <summary>
+		/// 優先度付きキュー
+		/// 優先度が同じ場合、挿入順に取出される。
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		class PriorityQueue<T> // where T : IComparable<T>
+		{
+			public int Count => buffer.Count;
+			public T Top => buffer[0].value;
+
+			private int id = 0;
+			private readonly List<(T value, int id)> buffer;
+			private readonly Func<(T value, int id), (T value, int id), int> compare;
+
+			public PriorityQueue() : this(Comparer<T>.Default.Compare) { }
+			public PriorityQueue(Func<T, T, int> compare)
+			{
+				buffer = new List<(T value, int id)>();
+				this.compare = (x, y) => {
+					int result = compare(x.value, y.value);
+					if (result == 0) {
+						result = -x.id.CompareTo(y.id);
+					}
+					return result;
+				};
+			}
+
+			public void Enqueue(T elem)
+			{
+				int n = Count;
+				buffer.Add((elem, id++));
+				while (n != 0) {
+					int i = (n - 1) / 2;
+					if (compare(buffer[n], buffer[i]) > 0) {
+						(buffer[i], buffer[n]) = (buffer[n], buffer[i]);
+					}
+					n = i;
+				}
+			}
+
+			public T Dequeue()
+			{
+				T result = buffer[0].value;
+
+				int n = Count - 1;
+				buffer[0] = buffer[n];
+				buffer.RemoveAt(n);
+				for (int i = 0, j; (j = 2 * i + 1) < n;) {
+					if ((j != n - 1) && (compare(buffer[j], buffer[j + 1]) < 0)) {
+						j++;
+					}
+					if (compare(buffer[i], buffer[j]) < 0) {
+						(buffer[i], buffer[j]) = (buffer[j], buffer[i]);
+					}
+					i = j;
+				}
+				return result;
+			}
+
+			public T this[int i]
+			{
+				get { return buffer[i].value; }
+			}
+		}
+		#endregion
+	}
+	#endregion
+
+	public static class IEnumerableExtensions
+	{
+		public static IEnumerable<IEnumerable<T>> Perm<T>(this IEnumerable<T> items, int? k = null)
+		{
+			k ??= items.Count();
+			if (k == 0) {
+				yield return Enumerable.Empty<T>();
+			} else {
+				var i = 0;
+				foreach (var x in items) {
+					var xs = items.Where((_, index) => i != index);
+					foreach (var c in Perm(xs, k - 1)) {
+						yield return c.Before(x);
+					}
+					i++;
+				}
+			}
+		}
+
+		// 要素をシーケンスに追加するユーティリティ
+		public static IEnumerable<T> Before<T>(this IEnumerable<T> items, T first)
+		{
+			yield return first;
+			foreach (var i in items) {
+				yield return i;
+			}
+		}
+
+		public static IEnumerable<IEnumerable<T>> Comb<T>(this IEnumerable<T> items, int r)
+		{
+			if (r == 0) {
+				yield return Enumerable.Empty<T>();
+			} else {
+				var i = 1;
+				foreach (var x in items) {
+					var xs = items.Skip(i);
+					foreach (var c in Comb(xs, r - 1)) {
+						yield return c.Before(x);
+					}
+					i++;
+				}
+			}
+		}
+	}
+
 }
