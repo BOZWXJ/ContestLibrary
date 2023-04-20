@@ -11,6 +11,12 @@ namespace AtCoderProblem
 	{
 		static Random rand = new Random();
 
+		const int mod = 998244353;
+		//const int mod = 1000000007;  // 1,000,000,007  10^9+7
+		static int Mod(long x, int m) { return (int)((x % m + m) % m); }
+		static long Mod(long x) { return (x % mod + mod) % mod; }
+		static long Sq(long x) { return x * x; }
+
 		[STAThread]
 		static void Main(string[] args)
 		{
@@ -22,15 +28,35 @@ namespace AtCoderProblem
 			//int N = 200000; // 2*10^5  200000
 			//int N = 100000; //   10^5  100000
 
-			int N = 100;
-			int K = 10;
-			int[] a = new int[N];
+			int N = 100000;
+			Queue<int> queue = new Queue<int>();
+			List<string> ans = new List<string>();
+			queue.Enqueue(1);
+
+			sb.AppendLine($"{N}");
 			for (int i = 0; i < N; i++) {
-				a[i] = rand.Next(1, N + 1);
+				int q = rand.Next(10);
+				if (q == 0) {
+					ans.Add(string.Concat(queue));
+					sb.AppendLine($"3");
+				} else if (q % 3 == 0 && queue.Count >= 2) {
+					queue.Dequeue();
+					sb.AppendLine($"2");
+				} else {
+					int x = rand.Next(1, 10);
+					queue.Enqueue(x);
+					sb.AppendLine($"1 {x}");
+				}
+			}
+			sb.AppendLine();
+			foreach (var s in ans) {
+				long x = 0;
+				foreach (var c in s) {
+					x = Mod(x * 10 + int.Parse($"{c}"), mod);
+				}
+				sb.AppendLine($"{x}\t{s}");
 			}
 
-			sb.AppendLine($"{N} {K}");
-			sb.AppendLine(string.Join(" ", a));
 			//sb.AppendLine(string.Join(" ", s));
 			//sb.AppendLine(string.Join(" ", t));
 

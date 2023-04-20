@@ -435,6 +435,47 @@ namespace ContestLibrary
 	}
 	#endregion
 
+	// 組合せの生成
+	// 10,6 00:00:00.0017999
+	#region 組合せの生成
+	public class Combination
+	{
+		public int N { get; private set; }
+		public int K { get; private set; }
+		public int[] Result { get; private set; }
+
+		public Combination(int n, int k)
+		{
+			N = n;
+			K = k;
+		}
+
+		public int[] Next()
+		{
+			if (Result == null) {
+				Result = new int[K];
+				for (int j = 0; j < K; j++) {
+					Result[j] = j;
+				}
+				return Result;
+			}
+			int i = K - 1;
+			while (0 <= i) {
+				int x = Result[i];
+				if (x + (K - i) < N) {
+					for (int j = i; j < K; j++) {
+						x++;
+						Result[j] = x;
+					}
+					return Result;
+				}
+				i--;
+			}
+			return null;
+		}
+	}
+	#endregion
+
 	// 順列の生成
 	// 10,6 00:00:00.7835979
 	#region 順列の生成
@@ -553,6 +594,11 @@ namespace ContestLibrary
 	}
 	#endregion
 
+	// 順列の生成
+	// 10,6 00:00:00.2586927
+	// 組合せの生成
+	// 10,6 00:00:00.0147173
+	#region 順列、組合せの生成
 	public static class IEnumerableExtensions
 	{
 		public static IEnumerable<IEnumerable<T>> Perm<T>(this IEnumerable<T> items, int? k = null)
@@ -597,5 +643,6 @@ namespace ContestLibrary
 			}
 		}
 	}
+	#endregion
 
 }

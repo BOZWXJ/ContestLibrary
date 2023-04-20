@@ -12,7 +12,7 @@ namespace AtCoder
 			var input = Console.In;
 			var output = Console.Out;
 			try {
-				Console.SetIn(File.OpenText("Problem.txt"));
+				Console.SetIn(File.OpenText(@"..\..\..\Problem.txt"));
 				var sw = new StringWriter();
 				Console.SetOut(sw);
 				var stopwatch = new Stopwatch();

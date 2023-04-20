@@ -28,31 +28,61 @@ namespace ContestLibrary
 		}
 		#endregion
 
-		// 二分探索（存在しない場合は負、複数存在する場合は先頭）
-		#region BinarySearch<T>()
-		public static int BinarySearch<T>(T[] array, T value) { return BinarySearch(array, 0, array.Length - 1, value, Comparer<T>.Default.Compare); }
-		public static int BinarySearch<T>(T[] array, T value, IComparer<T> comparer) { return BinarySearch(array, 0, array.Length - 1, value, comparer.Compare); }
-		public static int BinarySearch<T>(T[] array, T value, Func<T, T, int> compare) { return BinarySearch(array, 0, array.Length - 1, value, compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value) { return BinarySearch(array, lower, upper, value, Comparer<T>.Default.Compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value, IComparer<T> comparer) { return BinarySearch(array, lower, upper, value, comparer.Compare); }
-		public static int BinarySearch<T>(T[] array, int lower, int upper, T value, Func<T, T, int> compare)
+		#region BinarySearchFirst<T> 二分探索（同じ要素は先頭）
+		public static int BinarySearchFirst<T>(T[] array, T value) { return BinarySearchFirst(array, 0, array.Length, value, Comparer<T>.Default.Compare); }
+		public static int BinarySearchFirst<T>(T[] array, T value, IComparer<T> comparer) { return BinarySearchFirst(array, 0, array.Length, value, comparer.Compare); }
+		public static int BinarySearchFirst<T>(T[] array, T value, Comparison<T> compare) { return BinarySearchFirst(array, 0, array.Length, value, compare); }
+		public static int BinarySearchFirst<T>(T[] array, int index, int count, T value) { return BinarySearchFirst(array, index, count, value, Comparer<T>.Default.Compare); }
+		public static int BinarySearchFirst<T>(T[] array, int index, int count, T value, IComparer<T> comparer) { return BinarySearchFirst(array, index, count, value, comparer.Compare); }
+		public static int BinarySearchFirst<T>(T[] array, int index, int count, T value, Comparison<T> compare)
 		{
-			if (lower > upper) {
-				return ~(upper + 1);
+			int l = index;
+			int r = index + count;
+			if (l > r) {
+				return ~(r + 1);
 			}
-			int up = upper, mid;
-			while (lower < up) {
-				mid = (lower + up) / 2;
+			int mid;
+			while (l < r) {
+				mid = (l + r) / 2;
 				if (compare(array[mid], value) < 0) {
-					lower = mid + 1;
+					l = mid + 1;
 				} else {
-					up = mid;
+					r = mid;
 				}
 			}
-			if (compare(array[lower], value) != 0) {
-				lower = ~lower;
+			if (l == index + count || compare(array[l], value) != 0) {
+				l = ~l;
 			}
-			return lower;
+			return l;
+		}
+		#endregion
+
+		#region BinarySearchLast<T> 二分探索（同じ要素は末尾）
+		public int BinarySearchLast<T>(T[] array, T item) { return BinarySearchLast(array, 0, array.Length, item, null); }
+		public int BinarySearchLast<T>(T[] array, T item, IComparer<T> comparer) { return BinarySearchLast(array, 0, array.Length, item, comparer.Compare); }
+		public int BinarySearchLast<T>(T[] array, T item, Comparison<T> compare) { return BinarySearchLast(array, 0, array.Length, item, compare); }
+		public int BinarySearchLast<T>(T[] array, int index, int count, T item, Comparison<T> compare)
+		{
+			int l = index;
+			int r = index + count;
+			if (l > r) {
+				return ~(r + 1);
+			}
+			int mid;
+			while (l < r) {
+				mid = (l + r) / 2;
+				if (compare(array[mid], item) <= 0) {
+					l = mid + 1;
+				} else {
+					r = mid;
+				}
+			}
+			if (l == 0 || compare(array[l - 1], item) != 0) {
+				l = ~l;
+			} else {
+				l -= 1;
+			}
+			return l;
 		}
 		#endregion
 

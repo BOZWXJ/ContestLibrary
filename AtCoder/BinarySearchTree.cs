@@ -14,14 +14,14 @@ namespace ContestLibrary
 		public Node Root = null;
 		public int Count { get; private set; } = 0;
 
-		private readonly Func<T, T, int> compare;
+		private readonly Comparison<T> comparison;
 
 		public BinarySearchTree() : this(Comparer<T>.Default.Compare) { }
 		public BinarySearchTree(bool reverse) : this((x, y) => reverse ? Comparer<T>.Default.Compare(y, x) : Comparer<T>.Default.Compare(x, y)) { }
 		public BinarySearchTree(Comparer<T> comparer) : this(comparer.Compare) { }
-		public BinarySearchTree(Func<T, T, int> comparer)
+		public BinarySearchTree(Comparison<T> compare)
 		{
-			compare = comparer;
+			comparison = compare;
 		}
 
 		public bool Contains(T value)
@@ -31,7 +31,7 @@ namespace ContestLibrary
 
 		public void Clear()
 		{
-			Root = null;	// ?
+			Root = null;    // ?
 			Count = 0;
 		}
 
@@ -44,7 +44,7 @@ namespace ContestLibrary
 		{
 			Node n = Root;
 			while (n != null) {
-				int i = compare(n.Value, value);
+				int i = comparison(n.Value, value);
 				if (i > 0) {
 					n = n.Left;
 				} else if (i < 0) {
@@ -70,7 +70,7 @@ namespace ContestLibrary
 				Node p = null;
 				while (n != null) {
 					p = n;
-					if (compare(n.Value, value) > 0) {
+					if (comparison(n.Value, value) > 0) {
 						n = n.Left;
 					} else {
 						n = n.Right;
@@ -78,7 +78,7 @@ namespace ContestLibrary
 				}
 				n = new Node(value, p);
 				Count++;
-				if (compare(p.Value, value) > 0) {
+				if (comparison(p.Value, value) > 0) {
 					p.Left = n;
 				} else {
 					p.Right = n;
