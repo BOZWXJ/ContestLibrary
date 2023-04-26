@@ -7,8 +7,8 @@ namespace ContestLibrary
 
 	class Tree
 	{
-		Dictionary<int, HashSet<int>> edge = new Dictionary<int, HashSet<int>>();
-		int[] node;
+		private readonly Dictionary<int, HashSet<int>> edge = new Dictionary<int, HashSet<int>>();
+		private readonly int[] node;
 
 		public Tree(int max)
 		{
@@ -27,11 +27,11 @@ namespace ContestLibrary
 		/// 幅優先探索
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<int> Bfs()
+		public IEnumerable<(int i, int d)> Bfs(int start)
 		{
 			bool[] flg = new bool[node.Length];
 			Queue<(int i, int d)> queue = new Queue<(int i, int d)>();
-			queue.Enqueue((0, 0));
+			queue.Enqueue((start, 0));
 			while (queue.Count > 0) {
 				(int i, int d) = queue.Dequeue();
 				flg[i] = true;
@@ -40,7 +40,7 @@ namespace ContestLibrary
 						queue.Enqueue((j, d + 1));
 					}
 				}
-				yield return i;
+				yield return (i, d);
 			}
 		}
 
