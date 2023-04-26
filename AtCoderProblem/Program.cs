@@ -28,34 +28,11 @@ namespace AtCoderProblem
 			//int N = 200000; // 2*10^5  200000
 			//int N = 100000; //   10^5  100000
 
-			int N = 100000;
-			Queue<int> queue = new Queue<int>();
-			List<string> ans = new List<string>();
-			queue.Enqueue(1);
-
-			sb.AppendLine($"{N}");
-			for (int i = 0; i < N; i++) {
-				int q = rand.Next(10);
-				if (q == 0) {
-					ans.Add(string.Concat(queue));
-					sb.AppendLine($"3");
-				} else if (q % 3 == 0 && queue.Count >= 2) {
-					queue.Dequeue();
-					sb.AppendLine($"2");
-				} else {
-					int x = rand.Next(1, 10);
-					queue.Enqueue(x);
-					sb.AppendLine($"1 {x}");
-				}
-			}
-			sb.AppendLine();
-			foreach (var s in ans) {
-				long x = 0;
-				foreach (var c in s) {
-					x = Mod(x * 10 + int.Parse($"{c}"), mod);
-				}
-				sb.AppendLine($"{x}\t{s}");
-			}
+			int N = 2000;
+			sb.AppendLine($"{N} {N - 1}");
+			sb.AppendLine(MakeTree(N));
+			int K = 0;
+			sb.AppendLine($"{K}");
 
 			//sb.AppendLine(string.Join(" ", s));
 			//sb.AppendLine(string.Join(" ", t));

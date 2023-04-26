@@ -41,74 +41,52 @@ namespace AtCoder
 				int v = vs[1] - 1;
 				tree.AddEdge(u, v);
 			}
-			int k = int.Parse(Console.ReadLine());
-			List<int[]> list = new List<int[]>();
-			for (int i = 0; i < k; i++) {
-				vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
-				vs[0]--;
-				list.Add(vs);
+			// 最短距離計算
+			int[,] distance = new int[n, n];
+			for (int i = 0; i < n; i++) {
+				foreach (var (p, d) in tree.Bfs(i)) {
+					distance[i, p] = d;
+				}
 			}
-			list.Sort((x, y) => y[1].CompareTo(x[1]));
 
 			int[] ans = new int[n];
 			for (int i = 0; i < n; i++) {
 				ans[i] = -1;
 			}
 
-			Dictionary<int, HashSet<int>> hash = new Dictionary<int, HashSet<int>>();
+			int k = int.Parse(Console.ReadLine());
+			List<(int p, int d)> list = new List<(int p, int d)>();
 			for (int i = 0; i < k; i++) {
-				hash.Add(i, new HashSet<int>());
-				int p = list[i][0];
-				int d = list[i][1];
-				System.Diagnostics.Debug.WriteLine($"{p + 1} {d}");
-				foreach (var item in tree.Bfs(p)) {
-					if (item.d < d) {
-						System.Diagnostics.Debug.WriteLine($"\t{item.i + 1} {item.d}");
-						if (ans[item.i] != 1) {
-							ans[item.i] = 0;
-						} else {
-							Console.WriteLine("No");
-							return;
-						}
-					} else if (item.d == d) {
-						System.Diagnostics.Debug.WriteLine($"\t{item.i + 1} {item.d}");
-						if (d == 0) {
-							if (ans[item.i] != 0) {
-								ans[item.i] = 1;
-							} else {
-								Console.WriteLine("No");
-								return;
-							}
-						} else {
-							hash[i].Add(item.i);
-						}
-					} else {
-						break;
+				vs = Console.ReadLine().Split().Select(int.Parse).ToArray();
+				int p = vs[0] - 1;
+				int d = vs[1];
+				list.Add((p, d));
+				// 白
+				for (int j = 0; j < n; j++) {
+					if (distance[p, j] < d) {
+						ans[j] = 0;
 					}
 				}
-				System.Diagnostics.Debug.WriteLine(string.Join(" ", ans));
-				System.Diagnostics.Debug.WriteLine(string.Join(" ", hash[i].Select(p => p + 1)));
-				System.Diagnostics.Debug.WriteLine("");
+				//System.Diagnostics.Debug.WriteLine($"{p} {d} : {string.Join(" ", ans)}");
 			}
-
-			System.Diagnostics.Debug.WriteLine(string.Join(" ", ans));
-			foreach (var (key, value) in hash) {
-				System.Diagnostics.Debug.WriteLine($"{key}:{string.Join(" ", value.Select(p => p + 1))}");
-				if (value.Count > 0) {
-					bool flg = true;
-					foreach (var item in value) {
-						if (ans[item] != 0) {
-							ans[item] = 1;
-							flg = false;
-							break;
+			// 黒
+			foreach (var (p, d) in list) {
+				bool flg = false;
+				for (int j = 0; j < n; j++) {
+					if (distance[p, j] == d) {
+						if (ans[j] != 0) {
+							flg = true;
+							ans[j] = 1;
 						}
 					}
-					if (flg) {
-						Console.WriteLine("No");
-						return;
-					}
 				}
+				if (!flg) {
+					Console.WriteLine("No");
+					return;
+				}
+				//System.Diagnostics.Debug.WriteLine($"{p} {d} : {string.Join(" ", ans)}");
 			}
+			// 残
 			for (int i = 0; i < n; i++) {
 				if (ans[i] < 0) {
 					ans[i] = 1;
@@ -117,7 +95,6 @@ namespace AtCoder
 			Console.WriteLine("Yes");
 			Console.WriteLine(string.Concat(ans));
 
-
 		} // Solve()
 
 	} // class ABC
@@ -125,11 +102,11 @@ namespace AtCoder
 	class Tree
 	{
 		public readonly Dictionary<int, HashSet<int>> edge = new Dictionary<int, HashSet<int>>();
-		public readonly int[] node;
+		private readonly int nodeMax;
 
 		public Tree(int max)
 		{
-			node = new int[max + 1];
+			nodeMax = max;
 		}
 
 		public void AddEdge(int a, int b)
@@ -146,11 +123,17 @@ namespace AtCoder
 		/// <returns></returns>
 		public IEnumerable<(int i, int d)> Bfs(int start)
 		{
-			bool[] flg = new bool[node.Length];
+			if (edge.Count == 0) {
+				yield break;
+			}
+			bool[] flg = new bool[nodeMax + 1];
 			Queue<(int i, int d)> queue = new Queue<(int i, int d)>();
 			queue.Enqueue((start, 0));
 			while (queue.Count > 0) {
 				(int i, int d) = queue.Dequeue();
+				if (flg[i]) {
+					continue;
+				}
 				flg[i] = true;
 				foreach (var j in edge[i]) {
 					if (!flg[j]) {

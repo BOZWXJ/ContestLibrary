@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+
 
 namespace ContestLibrary
 {
 
 	class Tree
 	{
-		private readonly Dictionary<int, HashSet<int>> edge = new Dictionary<int, HashSet<int>>();
-		private readonly int[] node;
+		public readonly Dictionary<int, HashSet<int>> edge = new Dictionary<int, HashSet<int>>();
+		public readonly int nodeMax;
 
 		public Tree(int max)
 		{
-			node = new int[max + 1];
+			nodeMax = max;
 		}
 
 		public void AddEdge(int a, int b)
@@ -29,11 +32,17 @@ namespace ContestLibrary
 		/// <returns></returns>
 		public IEnumerable<(int i, int d)> Bfs(int start)
 		{
-			bool[] flg = new bool[node.Length];
+			if (edge.Count == 0) {
+				yield break;
+			}
+			bool[] flg = new bool[nodeMax + 1];
 			Queue<(int i, int d)> queue = new Queue<(int i, int d)>();
 			queue.Enqueue((start, 0));
 			while (queue.Count > 0) {
 				(int i, int d) = queue.Dequeue();
+				if (flg[i]) {
+					continue;
+				}
 				flg[i] = true;
 				foreach (var j in edge[i]) {
 					if (!flg[j]) {
@@ -48,11 +57,14 @@ namespace ContestLibrary
 		/// 深さ優先探索
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<int> Dfs()
+		public IEnumerable<int> Dfs(int start)
 		{
-			bool[] flg = new bool[node.Length];
+			if (edge.Count == 0) {
+				yield break;
+			}
+			bool[] flg = new bool[nodeMax + 1];
 			Stack<(int i, int d)> stack = new Stack<(int i, int d)>();
-			stack.Push((0, 0));
+			stack.Push((start, 0));
 			while (stack.Count > 0) {
 				(int i, int d) = stack.Peek();
 				if (!flg[i]) {
@@ -78,14 +90,14 @@ namespace ContestLibrary
 		/// 再帰 深さ優先探索
 		/// </summary>
 		/// <param name="i"></param>
-		public void Saiki(int i)
+		public void Saiki(int i, ref bool[] saikiFlg)
 		{
 			//System.Diagnostics.Debug.WriteLine($"{i}");
 			Console.Write($"{i} ");
-			node[i] = 1;
+			saikiFlg[i] = true;
 			foreach (var next in edge[i]) {
-				if (node[next] != 1) {
-					Saiki(next);
+				if (!saikiFlg[next]) {
+					Saiki(next, ref saikiFlg);
 					//System.Diagnostics.Debug.WriteLine($"{i}");
 					Console.Write($"{i} ");
 				}
